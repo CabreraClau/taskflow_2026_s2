@@ -52,4 +52,54 @@ describe('Tareas', () => {
 
     expect(res.body.items).toHaveLength(2);
   });
+
+  it('aplica status y priority simultaneamente al filtrar tareas', async () => {
+    const { token, id } = await registerUser('task4@test.com');
+    const project = await createProject(token, 'Proyecto de filtros combinados');
+
+    const todoHigh = (
+      await request(app)
+        .post(`/api/projects/${project.id}/tasks`)
+        .set(auth(token))
+        .send({ title: 'Tarea TODO alta', priority: 'HIGH' })
+    ).body;
+
+    await request(app)
+      .post(`/api/projects/${project.id}/tasks`)
+      .set(auth(token))
+      .send({ title: 'Tarea TODO baja', priority: 'LOW' });
+
+    const inProgressHigh = (
+      await request(app)
+        .post(`/api/projects/${project.id}/tasks`)
+        .set(auth(token))
+        .send({ title: 'Tarea en progreso alta', priority: 'HIGH', assigneeId: id })
+    ).body;
+
+    await request(app)
+      .patch(`/api/tasks/${inProgressHigh.id}`)
+      .set(auth(token))
+      .send({ status: 'IN_PROGRESS' });
+
+    const res = await request(app)
+      .get(`/api/projects/${project.id}/tasks?status=TODO&priority=HIGH`)
+      .set(auth(token));
+
+    expect(res.status).toBe(200);
+    expect(res.body.items).toHaveLength(1);
+    expect(res.body.items[0].id).toBe(todoHigh.id);
+  });
+
+  it('crea las tareas siempre con estado inicial TODO aunque el cliente envie otro estado', async () => {
+    const { token } = await registerUser('task5@test.com');
+    const project = await createProject(token, 'Proyecto de estado inicial');
+
+    const res = await request(app)
+      .post(`/api/projects/${project.id}/tasks`)
+      .set(auth(token))
+      .send({ title: 'Nueva tarea', status: 'DONE' });
+
+    expect(res.status).toBe(201);
+    expect(res.body.status).toBe('TODO');
+  });
 });
