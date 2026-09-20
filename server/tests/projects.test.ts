@@ -28,4 +28,13 @@ describe('Proyectos', () => {
 
     expect(res.status).toBe(401);
   });
+
+  it('rechaza crear un proyecto con nombre demasiado corto', async () => {
+    const { token } = await registerUser('proj3@test.com');
+
+    const res = await request(app).post('/api/projects').set(auth(token)).send({ name: 'ab' });
+
+    expect(res.status).toBe(400);
+    expect(res.body.code).toBe('VALIDATION_ERROR');
+  });
 });
