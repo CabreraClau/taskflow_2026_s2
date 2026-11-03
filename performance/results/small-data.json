@@ -1,0 +1,20 @@
+{
+  "counts": {
+    "users": 3,
+    "projects": 3,
+    "tasks": 12,
+    "comments": 5,
+    "load_projects": 0,
+    "load_tasks": 0,
+    "load_comments": 0,
+    "orphan_comments": 0
+  },
+  "project_id": "proj-1",
+  "project_name": "Rediseño del sitio",
+  "projects_returned": 1,
+  "tasks_returned": 6,
+  "total": 6,
+  "limit": 20,
+  "offset": 0,
+  "response_bytes": 1799
+}

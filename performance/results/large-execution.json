@@ -1,0 +1,19 @@
+{
+  "started_utc": "2026-11-03T23:26:53.377169+00:00",
+  "finished_utc": "2026-11-03T23:27:56.667508+00:00",
+  "command": [
+    "C:\\Program Files\\k6\\k6.exe",
+    "run",
+    "--no-color",
+    "--quiet",
+    "--summary-export",
+    "performance/results/large-summary.json",
+    "-e",
+    "VUS=20",
+    "-e",
+    "DURATION=1m",
+    "performance/scenarios/api-load.k6.js"
+  ],
+  "exit_code": 99,
+  "k6_version": "k6.exe v2.3.0 (commit/e088784614, go1.26.8, windows/amd64)"
+}

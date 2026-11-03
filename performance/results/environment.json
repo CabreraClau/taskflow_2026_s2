@@ -1,0 +1,12 @@
+{
+  "measuredAt": "2026-11-03T23:23:21.177Z",
+  "os": "Windows_NT",
+  "release": "10.0.26200",
+  "cpu": "13th Gen Intel(R) Core(TM) i9-13900H",
+  "logicalCPUs": 20,
+  "memoryGiB": 31.710582733154297,
+  "node": "v20.17.0",
+  "apiMode": "npm run dev (ts-node-dev)",
+  "database": "SQLite server/prisma/dev.db",
+  "commit": "0f9fc3896741c3d7289622447aaf483bfcd41136"
+}

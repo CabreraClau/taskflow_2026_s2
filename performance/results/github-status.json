@@ -1,0 +1,12 @@
+{
+  "repository": "CabreraClau/taskflow_2026_s2",
+  "issues_enabled": true,
+  "permissions": {
+    "admin": false,
+    "maintain": false,
+    "push": true,
+    "triage": true,
+    "pull": true
+  },
+  "checked_utc": "2026-11-03T23:33:37.439045+00:00"
+}

@@ -1,0 +1,41 @@
+time="2026-11-03T20:26:53-03:00" level=warning msg="SSLKEYLOGFILE was specified, logging TLS connection keys to '\\\\.\\aswMonFltProxy\\3cb37938267da59b'..." test_path="file:///C:/Users/sebam/Documents/UCU/testing/claudio/taskflow_2026_s2/performance/scenarios/api-load.k6.js"
+time="2026-11-03T20:26:53-03:00" level=info msg="Proyecto medido: proj-204; VUS=20; duración=1m0s" source=console
+
+
+  █ THRESHOLDS 
+
+    http_req_duration
+    ✗ 'p(95)<500' p(95)=15.4s
+
+    http_req_failed
+    ✓ 'rate<0.01' rate=0.00%
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 81      1.284633/s
+    checks_succeeded...: 100.00% 81 out of 81
+    checks_failed......: 0.00%   0 out of 81
+
+    ✓ login 200
+    ✓ status 200
+
+    HTTP
+    http_req_duration..............: avg=14.19s min=27.17ms med=14.46s max=15.77s p(90)=15.28s p(95)=15.4s 
+      { expected_response:true }...: avg=14.19s min=27.17ms med=14.46s max=15.77s p(90)=15.28s p(95)=15.4s 
+    http_req_failed................: 0.00%  0 out of 82
+    http_reqs......................: 82     1.300492/s
+
+    EXECUTION
+    iteration_duration.............: avg=15.54s min=14.51s  med=15.47s max=16.78s p(90)=16.29s p(95)=16.41s
+    iterations.....................: 80     1.268773/s
+    vus............................: 4      min=4       max=20
+    vus_max........................: 20     min=20      max=20
+
+    NETWORK
+    data_received..................: 150 MB 2.4 MB/s
+    data_sent......................: 24 kB  380 B/s
+
+
+
+time="2026-11-03T20:27:56-03:00" level=error msg="thresholds on metrics 'http_req_duration' have been crossed"
