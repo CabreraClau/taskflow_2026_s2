@@ -1,0 +1,48 @@
+k6.exe : time="2026-11-03T20:22:33-03:00" level=warning msg="SSLKEYLOGFILE was specified, logging TLS connection keys 
+to '\\\\.\\aswMonFltProxy\\3cb37938267da59b'..." 
+test_path="file:///C:/Users/sebam/Documents/UCU/testing/claudio/taskflow_2026_s2/performance/scenarios/api-load.k6.js"
+En línea: 2 Carácter: 41
++ ... e' version; & 'C:\Program Files\k6\k6.exe' run --no-color --quiet --s ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (time="2026-11-0...api-load.k6.js":String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+time="2026-11-03T20:22:34-03:00" level=info msg="Proyecto medido: proj-1; VUS=1; duración=30s" source=console
+
+
+  █ THRESHOLDS 
+
+    http_req_duration
+    ✓ 'p(95)<500' p(95)=102.57ms
+
+    http_req_failed
+    ✓ 'rate<0.01' rate=0.00%
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 30      0.965333/s
+    checks_succeeded...: 100.00% 30 out of 30
+    checks_failed......: 0.00%   0 out of 30
+
+    ✓ login 200
+    ✓ status 200
+
+    HTTP
+    http_req_duration..............: avg=65.37ms min=10.67ms med=67.37ms max=129.25ms p(90)=95.71ms p(95)=102.57ms
+      { expected_response:true }...: avg=65.37ms min=10.67ms med=67.37ms max=129.25ms p(90)=95.71ms p(95)=102.57ms
+    http_req_failed................: 0.00%  0 out of 31
+    http_reqs......................: 31     0.997511/s
+
+    EXECUTION
+    iteration_duration.............: avg=1.06s   min=1.01s   med=1.06s   max=1.13s    p(90)=1.09s   p(95)=1.1s    
+    iterations.....................: 29     0.933155/s
+    vus............................: 1      min=1       max=1
+    vus_max........................: 1      min=1       max=1
+
+    NETWORK
+    data_received..................: 61 kB  2.0 kB/s
+    data_sent......................: 8.9 kB 287 B/s
+
+
+

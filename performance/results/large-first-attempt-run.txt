@@ -1,0 +1,5 @@
+time="2026-11-03T20:23:49-03:00" level=warning msg="SSLKEYLOGFILE was specified, logging TLS connection keys to '\\\\.\\aswMonFltProxy\\3cb37938267da59b'..." test_path="file:///C:/Users/sebam/Documents/UCU/testing/claudio/taskflow_2026_s2/performance/scenarios/api-load.k6.js"
+time="2026-11-03T20:23:50-03:00" level=info msg="Proyecto medido: proj-204; VUS=20; duración=1m0s" source=console
+
+
+  █ THRESHOLDS 
