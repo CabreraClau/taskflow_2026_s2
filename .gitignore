@@ -6,7 +6,3 @@ coverage/
 .env
 server/tests/.tmp/
 .DS_Store
-playwright-report/
-test-results/
-blob-report/
-.playwright/
