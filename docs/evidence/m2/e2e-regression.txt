@@ -1,0 +1,10 @@
+
+Running 3 tests using 1 worker
+
+(node:18956) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › e2e\us12-editar.spec.ts:18:3 › US-12 · Editar tarea › US-12 c1 · Editar el título de una tarea lo actualiza (2.2s)
+  ok 2 [chromium] › e2e\us15-etiquetas.spec.ts:89:3 › US-15 · Etiquetar tareas › US-15 c4 · Una etiqueta de más de 30 caracteres devuelve 400 y no se agrega (1.6s)
+  ok 3 [chromium] › e2e\us15-etiquetas.spec.ts:113:3 › US-15 · Etiquetar tareas › US-15 c5 · La tarea admite 10 etiquetas y la número 11 devuelve 400 (2.9s)
+
+  3 passed (9.1s)

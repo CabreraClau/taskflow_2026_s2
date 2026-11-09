@@ -1,0 +1,1438 @@
+{
+  "schemaVersion": 1,
+  "startedAt": "2026-11-09T00:18:07.998Z",
+  "baseUrl": "http://127.0.0.1:3000/api",
+  "runId": "audit-1794183487998-cb04fb",
+  "scope": "Only disposable accounts/projects on a separately prepared isolated local database.",
+  "limits": [
+    "HTTP observations describe this run only, not a complete security certification.",
+    "An absent route (404 Endpoint not found) is not a successful authorization test.",
+    "The bounded SQL injection is read-only and restricts results to the two synthetic project IDs.",
+    "JWTs/passwords are generated in memory and redacted before persistence.",
+    "Synthetic fixtures are retained until the isolated database is discarded."
+  ],
+  "fixtures": {
+    "A": {
+      "userId": "user-5",
+      "email": "audit-1794183487998-cb04fb-a@example.test",
+      "projectId": "proj-5",
+      "taskId": "task-14",
+      "taskTitle": "audit-1794183487998-cb04fb-private-task-A"
+    },
+    "B": {
+      "userId": "user-6",
+      "email": "audit-1794183487998-cb04fb-b@example.test",
+      "projectId": "proj-6",
+      "taskId": "task-15",
+      "taskTitle": "audit-1794183487998-cb04fb-private-task-B"
+    },
+    "C": {
+      "userId": "user-7",
+      "email": "audit-1794183487998-cb04fb-reset-only@example.test",
+      "purpose": "Optional password-recovery test only; no project memberships."
+    }
+  },
+  "checks": [
+    {
+      "id": "headers-health",
+      "expectedBeforeExecution": "200; inspect CSP, X-Content-Type-Options, frame protection, Referrer-Policy and disclosure headers.",
+      "startedAt": "2026-11-09T00:18:08.002Z",
+      "http": {
+        "request": {
+          "method": "GET",
+          "path": "/api/health",
+          "headers": {}
+        },
+        "response": {
+          "status": 200,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "15",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "status": "ok"
+          }
+        }
+      },
+      "result": "observation",
+      "observation": "Header presence is evidence only; assess HTTP-local/HSTS and HTML/API context separately.",
+      "headersReviewed": {
+        "access-control-allow-origin": "*",
+        "connection": "keep-alive",
+        "content-length": "15",
+        "content-type": "application/json; charset=utf-8",
+        "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+        "etag": "W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\"",
+        "keep-alive": "timeout=5",
+        "x-powered-by": "Express"
+      }
+    },
+    {
+      "id": "projects-without-authentication",
+      "expectedBeforeExecution": "401: unauthenticated requests must not list private projects.",
+      "startedAt": "2026-11-09T00:18:08.101Z",
+      "http": {
+        "request": {
+          "method": "GET",
+          "path": "/api/projects",
+          "headers": {}
+        },
+        "response": {
+          "status": 401,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "82",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"52-0EkEsmj6oboEC6oDMAawVXZ+8ZM\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "error": {
+              "code": "UNAUTHORIZED",
+              "message": "Authentication required",
+              "details": []
+            }
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Unauthenticated project listing. HTTP 401."
+    },
+    {
+      "id": "setup-register-A",
+      "expectedBeforeExecution": "201; create a disposable account in the isolated database.",
+      "startedAt": "2026-11-09T00:18:08.112Z",
+      "http": {
+        "request": {
+          "method": "POST",
+          "path": "/api/auth/register",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "email": "audit-1794183487998-cb04fb-a@example.test",
+            "password": "[REDACTED]",
+            "name": "Security audit A"
+          }
+        },
+        "response": {
+          "status": 201,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "364",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"16c-AbXndl3LD6c4ZA/rxPs5C6KVz4U\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "user": {
+              "id": "user-5",
+              "email": "audit-1794183487998-cb04fb-a@example.test",
+              "name": "Security audit A",
+              "createdAt": "2026-11-09T00:18:08.253Z"
+            },
+            "token": "[REDACTED]"
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Disposable account A registration. HTTP 201."
+    },
+    {
+      "id": "setup-project-A",
+      "expectedBeforeExecution": "201; each account owns a distinct project and is not a member of the other.",
+      "startedAt": "2026-11-09T00:18:08.272Z",
+      "http": {
+        "request": {
+          "method": "POST",
+          "path": "/api/projects",
+          "headers": {
+            "authorization": "[REDACTED]",
+            "content-type": "application/json"
+          },
+          "body": {
+            "name": "audit-1794183487998-cb04fb-A",
+            "description": "Disposable security audit fixture"
+          }
+        },
+        "response": {
+          "status": 201,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "178",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"b2-51cu/d/m+mqX1JswaPcd8qGdvxE\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "id": "proj-5",
+            "name": "audit-1794183487998-cb04fb-A",
+            "description": "Disposable security audit fixture",
+            "ownerId": "user-5",
+            "archived": false,
+            "createdAt": "2026-11-09T00:18:08.283Z"
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Private synthetic project A creation. HTTP 201."
+    },
+    {
+      "id": "setup-task-A",
+      "expectedBeforeExecution": "201; each project contains a uniquely identifiable task.",
+      "startedAt": "2026-11-09T00:18:08.312Z",
+      "http": {
+        "request": {
+          "method": "POST",
+          "path": "/api/projects/proj-5/tasks",
+          "headers": {
+            "authorization": "[REDACTED]",
+            "content-type": "application/json"
+          },
+          "body": {
+            "title": "audit-1794183487998-cb04fb-private-task-A",
+            "description": "Synthetic private data A"
+          }
+        },
+        "response": {
+          "status": 201,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "277",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"115-oktpAJbQPiqZPeWAW9WoUmDqqA8\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "id": "task-14",
+            "projectId": "proj-5",
+            "title": "audit-1794183487998-cb04fb-private-task-A",
+            "description": "Synthetic private data A",
+            "status": "TODO",
+            "priority": "MEDIUM",
+            "assigneeId": null,
+            "dueDate": null,
+            "createdAt": "2026-11-09T00:18:08.325Z",
+            "updatedAt": "2026-11-09T00:18:08.325Z"
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Private synthetic task A creation. HTTP 201."
+    },
+    {
+      "id": "setup-register-B",
+      "expectedBeforeExecution": "201; create a disposable account in the isolated database.",
+      "startedAt": "2026-11-09T00:18:08.350Z",
+      "http": {
+        "request": {
+          "method": "POST",
+          "path": "/api/auth/register",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "email": "audit-1794183487998-cb04fb-b@example.test",
+            "password": "[REDACTED]",
+            "name": "Security audit B"
+          }
+        },
+        "response": {
+          "status": 201,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "364",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"16c-LfddC8+y2gI8mlYxGaDYeSFaSm8\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "user": {
+              "id": "user-6",
+              "email": "audit-1794183487998-cb04fb-b@example.test",
+              "name": "Security audit B",
+              "createdAt": "2026-11-09T00:18:08.484Z"
+            },
+            "token": "[REDACTED]"
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Disposable account B registration. HTTP 201."
+    },
+    {
+      "id": "setup-project-B",
+      "expectedBeforeExecution": "201; each account owns a distinct project and is not a member of the other.",
+      "startedAt": "2026-11-09T00:18:08.508Z",
+      "http": {
+        "request": {
+          "method": "POST",
+          "path": "/api/projects",
+          "headers": {
+            "authorization": "[REDACTED]",
+            "content-type": "application/json"
+          },
+          "body": {
+            "name": "audit-1794183487998-cb04fb-B",
+            "description": "Disposable security audit fixture"
+          }
+        },
+        "response": {
+          "status": 201,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "178",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"b2-iHgqYI9amTkRg2nuJ49wQ/LWtfE\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "id": "proj-6",
+            "name": "audit-1794183487998-cb04fb-B",
+            "description": "Disposable security audit fixture",
+            "ownerId": "user-6",
+            "archived": false,
+            "createdAt": "2026-11-09T00:18:08.517Z"
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Private synthetic project B creation. HTTP 201."
+    },
+    {
+      "id": "setup-task-B",
+      "expectedBeforeExecution": "201; each project contains a uniquely identifiable task.",
+      "startedAt": "2026-11-09T00:18:08.537Z",
+      "http": {
+        "request": {
+          "method": "POST",
+          "path": "/api/projects/proj-6/tasks",
+          "headers": {
+            "authorization": "[REDACTED]",
+            "content-type": "application/json"
+          },
+          "body": {
+            "title": "audit-1794183487998-cb04fb-private-task-B",
+            "description": "Synthetic private data B"
+          }
+        },
+        "response": {
+          "status": 201,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "277",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"115-LafoEnnK/TzNcDjcd8y0LzuBesU\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "id": "task-15",
+            "projectId": "proj-6",
+            "title": "audit-1794183487998-cb04fb-private-task-B",
+            "description": "Synthetic private data B",
+            "status": "TODO",
+            "priority": "MEDIUM",
+            "assigneeId": null,
+            "dueDate": null,
+            "createdAt": "2026-11-09T00:18:08.549Z",
+            "updatedAt": "2026-11-09T00:18:08.549Z"
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Private synthetic task B creation. HTTP 201."
+    },
+    {
+      "id": "projects-as-A",
+      "expectedBeforeExecution": "200; include the owned synthetic project and exclude the other user's private project.",
+      "startedAt": "2026-11-09T00:18:08.574Z",
+      "http": {
+        "request": {
+          "method": "GET",
+          "path": "/api/projects",
+          "headers": {
+            "authorization": "[REDACTED]"
+          }
+        },
+        "response": {
+          "status": 200,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "180",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"b4-RMYX9tGfZHgVHmzG31ltjGFOViQ\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": [
+            {
+              "id": "proj-5",
+              "name": "audit-1794183487998-cb04fb-A",
+              "description": "Disposable security audit fixture",
+              "ownerId": "user-5",
+              "archived": false,
+              "createdAt": "2026-11-09T00:18:08.283Z"
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "observation": "Own project present: true; foreign project exposed: false."
+    },
+    {
+      "id": "projects-as-B",
+      "expectedBeforeExecution": "200; include the owned synthetic project and exclude the other user's private project.",
+      "startedAt": "2026-11-09T00:18:08.597Z",
+      "http": {
+        "request": {
+          "method": "GET",
+          "path": "/api/projects",
+          "headers": {
+            "authorization": "[REDACTED]"
+          }
+        },
+        "response": {
+          "status": 200,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "180",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"b4-ucDNAb+QAuB3thP6Y0jQxBf/jDM\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": [
+            {
+              "id": "proj-6",
+              "name": "audit-1794183487998-cb04fb-B",
+              "description": "Disposable security audit fixture",
+              "ownerId": "user-6",
+              "archived": false,
+              "createdAt": "2026-11-09T00:18:08.517Z"
+            }
+          ]
+        }
+      },
+      "result": "pass",
+      "observation": "Own project present: true; foreign project exposed: false."
+    },
+    {
+      "id": "get-project-route-applicability",
+      "expectedBeforeExecution": "GET /projects/:id is not implemented in this version; 404 Endpoint not found means not applicable.",
+      "startedAt": "2026-11-09T00:18:08.607Z",
+      "http": {
+        "request": {
+          "method": "GET",
+          "path": "/api/projects/proj-5",
+          "headers": {
+            "authorization": "[REDACTED]"
+          }
+        },
+        "response": {
+          "status": 404,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "74",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"4a-zU8t77GtM1WmIp4WNz7hdmmaE1U\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Endpoint not found",
+              "details": []
+            }
+          }
+        }
+      },
+      "result": "not-applicable",
+      "observation": "This endpoint cannot validate object authorization; the implemented task routes are checked below."
+    },
+    {
+      "id": "foreign-project-tasks",
+      "expectedBeforeExecution": "403 or 404; B cannot list A's private tasks.",
+      "startedAt": "2026-11-09T00:18:08.615Z",
+      "http": {
+        "request": {
+          "method": "GET",
+          "path": "/api/projects/proj-5/tasks",
+          "headers": {
+            "authorization": "[REDACTED]"
+          }
+        },
+        "response": {
+          "status": 403,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "92",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"5c-tiazkpYDHery2DeXIE/GPLIQD44\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "error": {
+              "code": "FORBIDDEN",
+              "message": "You are not a member of this project",
+              "details": []
+            }
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Foreign task listing. HTTP 403."
+    },
+    {
+      "id": "foreign-task-read",
+      "expectedBeforeExecution": "403 or 404; B cannot read A's task directly.",
+      "startedAt": "2026-11-09T00:18:08.623Z",
+      "http": {
+        "request": {
+          "method": "GET",
+          "path": "/api/tasks/task-14",
+          "headers": {
+            "authorization": "[REDACTED]"
+          }
+        },
+        "response": {
+          "status": 403,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "92",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"5c-tiazkpYDHery2DeXIE/GPLIQD44\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "error": {
+              "code": "FORBIDDEN",
+              "message": "You are not a member of this project",
+              "details": []
+            }
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Foreign task detail. HTTP 403."
+    },
+    {
+      "id": "foreign-task-status",
+      "expectedBeforeExecution": "403 or 404; B is neither a member/admin nor assignee of A's task.",
+      "startedAt": "2026-11-09T00:18:08.631Z",
+      "http": {
+        "request": {
+          "method": "PATCH",
+          "path": "/api/tasks/task-14",
+          "headers": {
+            "authorization": "[REDACTED]",
+            "content-type": "application/json"
+          },
+          "body": {
+            "status": "IN_PROGRESS"
+          }
+        },
+        "response": {
+          "status": 403,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "114",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"72-XZWu52GWR859LsHAwFkkLu7YJM0\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "error": {
+              "code": "FORBIDDEN",
+              "message": "Only the assignee or a project admin can change the status",
+              "details": []
+            }
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Foreign state transition. HTTP 403."
+    },
+    {
+      "id": "foreign-task-title",
+      "expectedBeforeExecution": "403 or 404; non-members must not modify the title either.",
+      "startedAt": "2026-11-09T00:18:08.641Z",
+      "http": {
+        "request": {
+          "method": "PATCH",
+          "path": "/api/tasks/task-14",
+          "headers": {
+            "authorization": "[REDACTED]",
+            "content-type": "application/json"
+          },
+          "body": {
+            "title": "audit-1794183487998-cb04fb-changed-by-nonmember-B"
+          }
+        },
+        "response": {
+          "status": 200,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "285",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"11d-7MqLcyK18g3QhKfkYzyuFaI8qMI\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "id": "task-14",
+            "projectId": "proj-5",
+            "title": "audit-1794183487998-cb04fb-changed-by-nonmember-B",
+            "description": "Synthetic private data A",
+            "status": "TODO",
+            "priority": "MEDIUM",
+            "assigneeId": null,
+            "dueDate": null,
+            "createdAt": "2026-11-09T00:18:08.325Z",
+            "updatedAt": "2026-11-09T00:18:08.647Z"
+          }
+        }
+      },
+      "result": "finding",
+      "observation": "Foreign task title update. HTTP 200."
+    },
+    {
+      "id": "owner-verifies-foreign-title-update",
+      "expectedBeforeExecution": "200 with original title and TODO state; verify persistence instead of relying on HTTP status alone.",
+      "startedAt": "2026-11-09T00:18:08.664Z",
+      "http": {
+        "request": {
+          "method": "GET",
+          "path": "/api/tasks/task-14",
+          "headers": {
+            "authorization": "[REDACTED]"
+          }
+        },
+        "response": {
+          "status": 200,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "295",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"127-1DMeYzL93fRKHGXeENIl+e3kyb8\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "id": "task-14",
+            "projectId": "proj-5",
+            "title": "audit-1794183487998-cb04fb-changed-by-nonmember-B",
+            "description": "Synthetic private data A",
+            "status": "TODO",
+            "priority": "MEDIUM",
+            "assigneeId": null,
+            "dueDate": null,
+            "createdAt": "2026-11-09T00:18:08.325Z",
+            "updatedAt": "2026-11-09T00:18:08.647Z",
+            "tags": []
+          }
+        }
+      },
+      "result": "finding",
+      "observation": "Foreign title persisted: true; current status: TODO."
+    },
+    {
+      "id": "restore-synthetic-title",
+      "expectedBeforeExecution": "200; restore only the synthetic task owned by A.",
+      "startedAt": "2026-11-09T00:18:08.683Z",
+      "http": {
+        "request": {
+          "method": "PATCH",
+          "path": "/api/tasks/task-14",
+          "headers": {
+            "authorization": "[REDACTED]",
+            "content-type": "application/json"
+          },
+          "body": {
+            "title": "audit-1794183487998-cb04fb-private-task-A"
+          }
+        },
+        "response": {
+          "status": 200,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "277",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"115-SFtK4Swr/OHCiXqeR1cD+PRwiHY\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "id": "task-14",
+            "projectId": "proj-5",
+            "title": "audit-1794183487998-cb04fb-private-task-A",
+            "description": "Synthetic private data A",
+            "status": "TODO",
+            "priority": "MEDIUM",
+            "assigneeId": null,
+            "dueDate": null,
+            "createdAt": "2026-11-09T00:18:08.325Z",
+            "updatedAt": "2026-11-09T00:18:08.692Z"
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Synthetic task title restoration. HTTP 200."
+    },
+    {
+      "id": "assign-nonmember",
+      "expectedBeforeExecution": "400; project owner cannot assign a task to user B who is not a project member.",
+      "startedAt": "2026-11-09T00:18:08.713Z",
+      "http": {
+        "request": {
+          "method": "PATCH",
+          "path": "/api/tasks/task-14",
+          "headers": {
+            "authorization": "[REDACTED]",
+            "content-type": "application/json"
+          },
+          "body": {
+            "assigneeId": "user-6"
+          }
+        },
+        "response": {
+          "status": 400,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "107",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"6b-9/zf8IrtlsCdOpv7LkWYFLjViTg\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "The assignee must be a member of the project",
+              "details": []
+            }
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Non-member assignee validation. HTTP 400."
+    },
+    {
+      "id": "sqli-classic-login",
+      "expectedBeforeExecution": "401; the classic SQLi string must not authenticate without valid credentials.",
+      "startedAt": "2026-11-09T00:18:08.725Z",
+      "http": {
+        "request": {
+          "method": "POST",
+          "path": "/api/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "email": "' OR 1=1 --",
+            "password": "[REDACTED]"
+          }
+        },
+        "response": {
+          "status": 401,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "78",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"4e-nT5KRzSLE9pY6ChyBls/nR8T/zE\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "error": {
+              "code": "UNAUTHORIZED",
+              "message": "Invalid credentials",
+              "details": []
+            }
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Classic login injection. HTTP 401."
+    },
+    {
+      "id": "search-baseline-own-project",
+      "expectedBeforeExecution": "200; a literal unique marker only returns A's own synthetic task.",
+      "startedAt": "2026-11-09T00:18:08.734Z",
+      "http": {
+        "request": {
+          "method": "GET",
+          "path": "/api/projects/proj-5/tasks?search=audit-1794183487998-cb04fb-private-task-A",
+          "headers": {
+            "authorization": "[REDACTED]"
+          }
+        },
+        "response": {
+          "status": 200,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "354",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"162-JozCjNqoVEFSb5xzrwrEuMrmrN4\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "items": [
+              {
+                "id": "task-14",
+                "projectId": "proj-5",
+                "title": "audit-1794183487998-cb04fb-private-task-A",
+                "description": "Synthetic private data A",
+                "status": "TODO",
+                "priority": "MEDIUM",
+                "assigneeId": null,
+                "dueDate": null,
+                "createdAt": "2026-11-09T00:18:08.325Z",
+                "updatedAt": "2026-11-09T00:18:08.692Z",
+                "assignee": null,
+                "commentCount": 0
+              }
+            ],
+            "total": 1,
+            "limit": 20,
+            "offset": 0
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Baseline literal search before injection."
+    },
+    {
+      "id": "sqli-classic-search",
+      "expectedBeforeExecution": "Treat the input as literal text or reject with 4xx; a 500 is a robustness problem but does not alone prove a data leak.",
+      "startedAt": "2026-11-09T00:18:08.806Z",
+      "http": {
+        "request": {
+          "method": "GET",
+          "path": "/api/projects/proj-5/tasks?search='%20OR%201%3D1%20--",
+          "headers": {
+            "authorization": "[REDACTED]"
+          }
+        },
+        "response": {
+          "status": 500,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "78",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:08 GMT",
+            "etag": "W/\"4e-RFFg/590DBTnm3a9MVhQbDSIRe0\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "error": {
+              "code": "INTERNAL",
+              "message": "Unexpected server error",
+              "details": []
+            }
+          }
+        }
+      },
+      "result": "observation",
+      "observation": "Classic search injection produced HTTP 500; the bounded test determines cross-project impact."
+    },
+    {
+      "id": "sqli-bounded-cross-project-read",
+      "expectedBeforeExecution": "No rows from B; input must remain data. The payload restricts the SELECT to our synthetic A/B project IDs.",
+      "startedAt": "2026-11-09T00:18:09.099Z",
+      "http": {
+        "request": {
+          "method": "GET",
+          "path": "/api/projects/proj-5/tasks?search=')%20%3E%200)%20AND%200%20%3D%201%20OR%20projectId%20IN%20(5%2C%206)%20--",
+          "headers": {
+            "authorization": "[REDACTED]"
+          }
+        },
+        "response": {
+          "status": 200,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "665",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:09 GMT",
+            "etag": "W/\"299-lWFThS9GA58GCsc89xcAWBlO1v8\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "items": [
+              {
+                "id": "task-14",
+                "projectId": "proj-5",
+                "title": "audit-1794183487998-cb04fb-private-task-A",
+                "description": "Synthetic private data A",
+                "status": "TODO",
+                "priority": "MEDIUM",
+                "assigneeId": null,
+                "dueDate": null,
+                "createdAt": "2026-11-09T00:18:08.325Z",
+                "updatedAt": "2026-11-09T00:18:08.692Z",
+                "assignee": null,
+                "commentCount": 0
+              },
+              {
+                "id": "task-15",
+                "projectId": "proj-6",
+                "title": "audit-1794183487998-cb04fb-private-task-B",
+                "description": "Synthetic private data B",
+                "status": "TODO",
+                "priority": "MEDIUM",
+                "assigneeId": null,
+                "dueDate": null,
+                "createdAt": "2026-11-09T00:18:08.549Z",
+                "updatedAt": "2026-11-09T00:18:08.549Z",
+                "assignee": null,
+                "commentCount": 0
+              }
+            ],
+            "total": 2,
+            "limit": 20,
+            "offset": 0
+          }
+        }
+      },
+      "result": "finding",
+      "observation": "Synthetic task B read by A: true; unrelated projects returned: false.",
+      "boundedPayload": "') > 0) AND 0 = 1 OR projectId IN (5, 6) --"
+    },
+    {
+      "id": "jwt-alg-none",
+      "expectedBeforeExecution": "401; an unsigned alg=none token must be rejected.",
+      "startedAt": "2026-11-09T00:18:09.124Z",
+      "http": {
+        "request": {
+          "method": "GET",
+          "path": "/api/projects",
+          "headers": {
+            "authorization": "[REDACTED]"
+          }
+        },
+        "response": {
+          "status": 401,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "83",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:09 GMT",
+            "etag": "W/\"53-gIPMFB/uBNXU8XqDUaX/blmX1bc\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "error": {
+              "code": "UNAUTHORIZED",
+              "message": "Invalid or expired token",
+              "details": []
+            }
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Unsigned token validation. HTTP 401."
+    },
+    {
+      "id": "lockout-failed-attempt-1",
+      "expectedBeforeExecution": "401; bounded five-attempt check on synthetic account B only.",
+      "startedAt": "2026-11-09T00:18:09.127Z",
+      "http": {
+        "request": {
+          "method": "POST",
+          "path": "/api/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "email": "audit-1794183487998-cb04fb-b@example.test",
+            "password": "[REDACTED]"
+          }
+        },
+        "response": {
+          "status": 401,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "78",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:09 GMT",
+            "etag": "W/\"4e-nT5KRzSLE9pY6ChyBls/nR8T/zE\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "error": {
+              "code": "UNAUTHORIZED",
+              "message": "Invalid credentials",
+              "details": []
+            }
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Synthetic login failure 1. HTTP 401."
+    },
+    {
+      "id": "lockout-failed-attempt-2",
+      "expectedBeforeExecution": "401; bounded five-attempt check on synthetic account B only.",
+      "startedAt": "2026-11-09T00:18:09.298Z",
+      "http": {
+        "request": {
+          "method": "POST",
+          "path": "/api/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "email": "audit-1794183487998-cb04fb-b@example.test",
+            "password": "[REDACTED]"
+          }
+        },
+        "response": {
+          "status": 401,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "78",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:09 GMT",
+            "etag": "W/\"4e-nT5KRzSLE9pY6ChyBls/nR8T/zE\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "error": {
+              "code": "UNAUTHORIZED",
+              "message": "Invalid credentials",
+              "details": []
+            }
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Synthetic login failure 2. HTTP 401."
+    },
+    {
+      "id": "lockout-failed-attempt-3",
+      "expectedBeforeExecution": "401; bounded five-attempt check on synthetic account B only.",
+      "startedAt": "2026-11-09T00:18:09.494Z",
+      "http": {
+        "request": {
+          "method": "POST",
+          "path": "/api/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "email": "audit-1794183487998-cb04fb-b@example.test",
+            "password": "[REDACTED]"
+          }
+        },
+        "response": {
+          "status": 401,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "78",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:09 GMT",
+            "etag": "W/\"4e-nT5KRzSLE9pY6ChyBls/nR8T/zE\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "error": {
+              "code": "UNAUTHORIZED",
+              "message": "Invalid credentials",
+              "details": []
+            }
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Synthetic login failure 3. HTTP 401."
+    },
+    {
+      "id": "lockout-failed-attempt-4",
+      "expectedBeforeExecution": "401; bounded five-attempt check on synthetic account B only.",
+      "startedAt": "2026-11-09T00:18:09.644Z",
+      "http": {
+        "request": {
+          "method": "POST",
+          "path": "/api/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "email": "audit-1794183487998-cb04fb-b@example.test",
+            "password": "[REDACTED]"
+          }
+        },
+        "response": {
+          "status": 401,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "78",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:09 GMT",
+            "etag": "W/\"4e-nT5KRzSLE9pY6ChyBls/nR8T/zE\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "error": {
+              "code": "UNAUTHORIZED",
+              "message": "Invalid credentials",
+              "details": []
+            }
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Synthetic login failure 4. HTTP 401."
+    },
+    {
+      "id": "lockout-failed-attempt-5",
+      "expectedBeforeExecution": "401; bounded five-attempt check on synthetic account B only.",
+      "startedAt": "2026-11-09T00:18:09.837Z",
+      "http": {
+        "request": {
+          "method": "POST",
+          "path": "/api/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "email": "audit-1794183487998-cb04fb-b@example.test",
+            "password": "[REDACTED]"
+          }
+        },
+        "response": {
+          "status": 401,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "78",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:10 GMT",
+            "etag": "W/\"4e-nT5KRzSLE9pY6ChyBls/nR8T/zE\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "error": {
+              "code": "UNAUTHORIZED",
+              "message": "Invalid credentials",
+              "details": []
+            }
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Synthetic login failure 5. HTTP 401."
+    },
+    {
+      "id": "lockout-valid-credentials-after-five-failures",
+      "expectedBeforeExecution": "401 with temporary-lock message, even with the correct synthetic password.",
+      "startedAt": "2026-11-09T00:18:10.126Z",
+      "http": {
+        "request": {
+          "method": "POST",
+          "path": "/api/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "email": "audit-1794183487998-cb04fb-b@example.test",
+            "password": "[REDACTED]"
+          }
+        },
+        "response": {
+          "status": 401,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "103",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:10 GMT",
+            "etag": "W/\"67-XerQBeFWXRlGmnuIOvqltnbCNvE\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "error": {
+              "code": "UNAUTHORIZED",
+              "message": "Account temporarily locked. Try again later.",
+              "details": []
+            }
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Five failed requests: 401, 401, 401, 401, 401; valid credentials after lock: HTTP 401. No waiting, concurrency or rate-limit bypass was tested."
+    },
+    {
+      "id": "setup-register-reset-only",
+      "expectedBeforeExecution": "201; separate disposable account C, never a real user or a project owner from the earlier checks.",
+      "startedAt": "2026-11-09T00:18:10.136Z",
+      "http": {
+        "request": {
+          "method": "POST",
+          "path": "/api/auth/register",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "email": "audit-1794183487998-cb04fb-reset-only@example.test",
+            "password": "[REDACTED]",
+            "name": "Security audit reset only"
+          }
+        },
+        "response": {
+          "status": 201,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "394",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:10 GMT",
+            "etag": "W/\"18a-boht8CSVd3fkGTEgUr7RV/iyFK0\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "user": {
+              "id": "user-7",
+              "email": "audit-1794183487998-cb04fb-reset-only@example.test",
+              "name": "Security audit reset only",
+              "createdAt": "2026-11-09T00:18:10.267Z"
+            },
+            "token": "[REDACTED]"
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "Separate disposable password-recovery account registration. HTTP 201."
+    },
+    {
+      "id": "password-recovery-public-token-disclosure",
+      "expectedBeforeExecution": "200 with a generic message, without recovery credentials in the public response; token should travel through a separate verified channel.",
+      "startedAt": "2026-11-09T00:18:10.282Z",
+      "http": {
+        "request": {
+          "method": "POST",
+          "path": "/api/auth/forgot-password",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "email": "audit-1794183487998-cb04fb-reset-only@example.test"
+          }
+        },
+        "response": {
+          "status": 200,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "97",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:10 GMT",
+            "etag": "W/\"61-nbYKke80eqQrmVdgoubnrntM3UA\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "message": "Password reset requested",
+            "token": "[REDACTED]"
+          }
+        }
+      },
+      "result": "finding",
+      "observation": "Recovery credential disclosed in unauthenticated JSON response: true. The credential itself is redacted."
+    },
+    {
+      "id": "password-reset-first-use",
+      "expectedBeforeExecution": "200; first use of a fresh recovery token changes only the synthetic C account.",
+      "startedAt": "2026-11-09T00:18:10.308Z",
+      "http": {
+        "request": {
+          "method": "POST",
+          "path": "/api/auth/reset-password",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "token": "[REDACTED]",
+            "newPassword": "[REDACTED]"
+          }
+        },
+        "response": {
+          "status": 200,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "30",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:10 GMT",
+            "etag": "W/\"1e-lakmr+DKqfX/l24uCPnpB/kr9GQ\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "message": "Password updated"
+          }
+        }
+      },
+      "result": "pass",
+      "observation": "First recovery-token use. HTTP 200."
+    },
+    {
+      "id": "password-reset-same-token-reuse",
+      "expectedBeforeExecution": "400 or 401; a used recovery token must not reset the password again.",
+      "startedAt": "2026-11-09T00:18:10.459Z",
+      "http": {
+        "request": {
+          "method": "POST",
+          "path": "/api/auth/reset-password",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "token": "[REDACTED]",
+            "newPassword": "[REDACTED]"
+          }
+        },
+        "response": {
+          "status": 200,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "30",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:10 GMT",
+            "etag": "W/\"1e-lakmr+DKqfX/l24uCPnpB/kr9GQ\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "message": "Password updated"
+          }
+        }
+      },
+      "result": "finding",
+      "observation": "Reusing the same recovery token. HTTP 200."
+    },
+    {
+      "id": "password-reset-reuse-login-verification",
+      "expectedBeforeExecution": "401; if reuse was rejected, the second password must not authenticate.",
+      "startedAt": "2026-11-09T00:18:10.646Z",
+      "http": {
+        "request": {
+          "method": "POST",
+          "path": "/api/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "email": "audit-1794183487998-cb04fb-reset-only@example.test",
+            "password": "[REDACTED]"
+          }
+        },
+        "response": {
+          "status": 200,
+          "headers": {
+            "access-control-allow-origin": "*",
+            "connection": "keep-alive",
+            "content-length": "394",
+            "content-type": "application/json; charset=utf-8",
+            "date": "Mon, 09 Nov 2026 00:18:10 GMT",
+            "etag": "W/\"18a-boht8CSVd3fkGTEgUr7RV/iyFK0\"",
+            "keep-alive": "timeout=5",
+            "x-powered-by": "Express"
+          },
+          "body": {
+            "user": {
+              "id": "user-7",
+              "email": "audit-1794183487998-cb04fb-reset-only@example.test",
+              "name": "Security audit reset only",
+              "createdAt": "2026-11-09T00:18:10.267Z"
+            },
+            "token": "[REDACTED]"
+          }
+        }
+      },
+      "result": "finding",
+      "observation": "Verify whether the reused recovery token actually replaced the password. HTTP 200."
+    }
+  ],
+  "completedAt": "2026-11-09T00:18:10.798Z",
+  "summary": {
+    "observation": 2,
+    "pass": 25,
+    "not-applicable": 1,
+    "finding": 6
+  }
+}

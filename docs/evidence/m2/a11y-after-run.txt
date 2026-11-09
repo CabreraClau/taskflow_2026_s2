@@ -1,0 +1,16 @@
+
+Running 4 tests using 1 worker
+
+(node:20776) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Login: 0 regla(s) WCAG violada(s)
+Registro: 0 regla(s) WCAG violada(s)
+Proyectos: 0 regla(s) WCAG violada(s)
+Detalle de proyecto: 0 regla(s) WCAG violada(s)
+Detalle de tarea: 0 regla(s) WCAG violada(s)
+  ok 1 [chromium] › e2e\playwright\tests\a11y.spec.ts:57:1 › a11y informe WCAG 2.1 A y AA en cinco vistas (8.8s)
+  ok 2 [chromium] › e2e\playwright\tests\a11y.spec.ts:92:1 › a11y verificación de la corrección label en detalle de tarea (2.2s)
+  ok 3 [chromium] › e2e\playwright\tests\a11y.spec.ts:106:1 › a11y revisión complementaria de teclado idioma errores y CSS (2.5s)
+  ok 4 [chromium] › e2e\playwright\tests\a11y.spec.ts:155:1 › seguridad XSS almacenado se representa como texto en tablero y detalle (1.7s)
+
+  4 passed (18.8s)

@@ -1,0 +1,69 @@
+{
+  "phase": "before",
+  "engine": "axe-core",
+  "scope": "WCAG 2.1 A/AA",
+  "views": [
+    {
+      "name": "Login",
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "Registro",
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "Proyectos",
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "Detalle de proyecto",
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "Detalle de tarea",
+      "violations": [
+        {
+          "id": "label",
+          "impact": "critical",
+          "help": "Form elements must have labels",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label?application=playwright",
+          "tags": [
+            "cat.forms",
+            "wcag2a",
+            "wcag412",
+            "section508",
+            "section508.22.n",
+            "TTv5",
+            "TT5.c",
+            "EN-301-549",
+            "EN-9.4.1.2",
+            "ACT",
+            "RGAAv4",
+            "RGAA-11.1.1"
+          ],
+          "nodes": [
+            {
+              "target": [
+                "input[data-testid=\"tag-add-input\"]"
+              ],
+              "html": "<input type=\"text\" data-testid=\"tag-add-input\" value=\"\">",
+              "failureSummary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element has no placeholder attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            },
+            {
+              "target": [
+                "textarea[data-testid=\"comment-add-input\"]"
+              ],
+              "html": "<textarea data-testid=\"comment-add-input\"></textarea>",
+              "failureSummary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element has no placeholder attribute\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+            }
+          ]
+        }
+      ],
+      "incompleteRules": []
+    }
+  ]
+}
