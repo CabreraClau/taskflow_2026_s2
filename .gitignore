@@ -6,3 +6,4 @@ coverage/
 .env
 server/tests/.tmp/
 .DS_Store
+.audit/

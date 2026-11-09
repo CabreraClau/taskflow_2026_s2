@@ -1,0 +1,21 @@
+HEAD /api/health
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Access-Control-Allow-Origin: *
+Content-Type: application/json; charset=utf-8
+Content-Length: 15
+ETag: W/"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg"
+Date: Mon, 09 Nov 2026 00:20:08 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+HEAD /api/projects autenticado
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Access-Control-Allow-Origin: *
+Content-Type: application/json; charset=utf-8
+Content-Length: 182
+ETag: W/"b6-4gwWZ08M4U/hx5eV+5LznR4VCas"
+Date: Mon, 09 Nov 2026 00:20:08 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5

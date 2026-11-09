@@ -1,0 +1,76 @@
+
+> taskflow@1.0.0 test
+> npm --prefix server test
+
+
+> taskflow-server@1.0.0 test
+> jest --runInBand
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": SQLite database "template.db" at "file:C:/Users/clauu/OneDrive/Documentos/ucu/TestingDeSoftware/taskflow-seguridad-accesibilidad/server/tests/.tmp/template.db"
+
+Your database is now in sync with your Prisma schema. Done in 2.32s
+
+FAIL tests/tasks.test.ts (11.966 s)
+  ● Tareas › aplica status y priority simultaneamente al filtrar tareas
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 2
+    Received array:  [{"assignee": null, "assigneeId": null, "commentCount": 0, "createdAt": "2026-11-09T00:21:20.499Z", "description": null, "dueDate": null, "id": "task-5", "priority": "HIGH", "projectId": "proj-4", "status": "TODO", "title": "Tarea TODO alta", "updatedAt": "2026-11-09T00:21:20.499Z"}, {"assignee": {"email": "task4@test.com", "id": "user-4"}, "assigneeId": "user-4", "commentCount": 0, "createdAt": "2026-11-09T00:21:20.562Z", "description": null, "dueDate": null, "id": "task-7", "priority": "HIGH", "projectId": "proj-4", "status": "IN_PROGRESS", "title": "Tarea en progreso alta", "updatedAt": "2026-11-09T00:21:20.593Z"}]
+
+      87 |
+      88 |     expect(res.status).toBe(200);
+    > 89 |     expect(res.body.items).toHaveLength(1);
+         |                            ^
+      90 |     expect(res.body.items[0].id).toBe(todoHigh.id);
+      91 |   });
+      92 |
+
+      at Object.<anonymous> (tests/tasks.test.ts:89:28)
+
+  ● Tareas › crea las tareas siempre con estado inicial TODO aunque el cliente envie otro estado
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "TODO"
+    Received: "DONE"
+
+      101 |
+      102 |     expect(res.status).toBe(201);
+    > 103 |     expect(res.body.status).toBe('TODO');
+          |                             ^
+      104 |   });
+      105 | });
+      106 |
+
+      at Object.<anonymous> (tests/tasks.test.ts:103:29)
+
+FAIL tests/projects.test.ts
+  ● Proyectos › rechaza crear un proyecto con nombre demasiado corto
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 201
+
+      35 |     const res = await request(app).post('/api/projects').set(auth(token)).send({ name: 'ab' });
+      36 |
+    > 37 |     expect(res.status).toBe(400);
+         |                        ^
+      38 |     expect(res.body.code).toBe('VALIDATION_ERROR');
+      39 |   });
+      40 | });
+
+      at Object.<anonymous> (tests/projects.test.ts:37:24)
+
+PASS tests/comments.test.ts
+PASS tests/auth.test.ts
+
+Test Suites: 2 failed, 2 passed, 4 total
+Tests:       3 failed, 11 passed, 14 total
+Snapshots:   0 total
+Time:        18.951 s
+Ran all test suites.
