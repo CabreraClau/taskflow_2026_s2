@@ -9,7 +9,7 @@ const unique = `${path.basename(expect.getState().testPath ?? 'test')}-${process
 const dbFile = path.join(TMP, unique);
 
 fs.copyFileSync(TEMPLATE_DB, dbFile);
-process.env.DATABASE_URL = `file:${dbFile}`;
+process.env.DATABASE_URL = `file:${dbFile.replace(/\\/g, '/')}`;
 process.env.JWT_SECRET = 'test-secret';
 
 afterAll(async () => {
