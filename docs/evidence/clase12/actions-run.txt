@@ -1,0 +1,15 @@
+Workflow: CI de calidad (informativo)
+Run: #1
+Run id: 42922806419
+Evento: push
+Rama: agregar-ci
+Commit: d75afbfa707e807fe513ed16cfbcba547a6dda3d
+URL: https://github.com/CabreraClau/taskflow_2026_s2/actions/runs/42922806419
+Estado global: failure
+
+Job             Estado
+Build servidor  success
+Build cliente   success
+Lint            success
+Tests           failure
+Cobertura       failure

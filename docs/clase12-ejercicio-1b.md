@@ -25,6 +25,20 @@ Resultado local de referencia (mismos comandos que ejecuta cada job):
 | Lint (resuelto) | c. Calidad de código | Antes de esta entrega, `server/src/modules/comments/comments.service.ts` líneas 7, 16 y 26 reportaba `Unexpected any` y `'e' is defined but never used`. Se corrigieron los tipos; hoy el job queda verde. |
 | Build servidor y build cliente | d. Pipeline o entorno | Sin fallas: `tsc` y `vite build` terminan con código 0. |
 
+## Resultado en GitHub Actions
+
+Corrida [run #1](https://github.com/CabreraClau/taskflow_2026_s2/actions/runs/42922806419) sobre la rama `agregar-ci`, commit `d75afbf`:
+
+| Job | Resultado |
+| --- | --- |
+| Build servidor | success |
+| Build cliente | success |
+| Lint | success |
+| Tests | failure |
+| Cobertura | failure |
+
+Tres jobs en verde y dos en rojo, como anticipa la clase. Evidencia: [actions-run.txt](evidence/clase12/actions-run.txt).
+
 ## Criterio de lectura
 
 - No se borró ni deshabilitó ningún test rojo: los 3 fallos son defectos reales contra la especificación y quedan documentados en `docs/bugs/`.
