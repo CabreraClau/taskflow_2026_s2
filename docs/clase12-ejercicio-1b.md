@@ -27,9 +27,16 @@ Resultado local de referencia (mismos comandos que ejecuta cada job):
 
 ## Resultado en GitHub Actions
 
-Corrida [run #1](https://github.com/CabreraClau/taskflow_2026_s2/actions/runs/42922806419) sobre la rama `agregar-ci`, commit `d75afbf`:
+Pull request: https://github.com/CabreraClau/taskflow_2026_s2/pull/9
 
-| Job | Resultado |
+Se registraron las dos corridas que pide la clase: una por el push y otra al abrir el PR.
+
+| Corrida | Evento | Commit | URL | Resultado |
+| --- | --- | --- | --- | --- |
+| #1 | push | `d75afbf` | [run 42922806419](https://github.com/CabreraClau/taskflow_2026_s2/actions/runs/42922806419) | 3 verdes, 2 rojos |
+| #3 | pull_request | `e502144` | [run 42923045185](https://github.com/CabreraClau/taskflow_2026_s2/actions/runs/42923045185) | 3 verdes, 2 rojos |
+
+| Job | Resultado en ambas corridas |
 | --- | --- |
 | Build servidor | success |
 | Build cliente | success |
