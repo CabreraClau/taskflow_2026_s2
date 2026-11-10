@@ -20,7 +20,6 @@ export function errorHandler(
     return;
   }
 
-  // eslint-disable-next-line no-console
   console.error(err);
   res.status(500).json({
     error: { code: 'INTERNAL', message: 'Unexpected server error', details: [] },
