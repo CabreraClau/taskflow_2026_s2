@@ -1,0 +1,32 @@
+Repositorio: CabreraClau/taskflow_2026_s2
+Pull request: https://github.com/CabreraClau/taskflow_2026_s2/pull/9
+
+Corrida 1 (push)
+Run: #1
+Run id: 42922806419
+Commit: d75afbfa707e807fe513ed16cfbcba547a6dda3d
+Evento: push
+Estado global: failure
+URL: https://github.com/CabreraClau/taskflow_2026_s2/actions/runs/42922806419
+
+Job             Estado
+Build servidor  success
+Build cliente   success
+Lint            success
+Tests           failure
+Cobertura       failure
+
+Corrida 2 (pull request)
+Run: #3
+Run id: 42923045185
+Commit: e502144
+Evento: pull_request
+Estado global: failure
+URL: https://github.com/CabreraClau/taskflow_2026_s2/actions/runs/42923045185
+
+Job             Estado
+Build servidor  success
+Build cliente   success
+Lint            success
+Tests           failure
+Cobertura       failure
