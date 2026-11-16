@@ -88,6 +88,182 @@
         },
         "status": 200
       }
+    },
+    {
+      "description": "un GET autorizado a los comentarios de una tarea",
+      "providerStates": [
+        {
+          "name": "ana es miembro de una tarea con comentarios"
+        }
+      ],
+      "request": {
+        "generators": {
+          "path": {
+            "expression": "/api/tasks/${taskId}/comments",
+            "type": "ProviderState"
+          }
+        },
+        "headers": {
+          "Authorization": "Bearer abc"
+        },
+        "matchingRules": {
+          "header": {
+            "Authorization": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          },
+          "path": {
+            "combine": "AND",
+            "matchers": [
+              {
+                "match": "type"
+              }
+            ]
+          }
+        },
+        "method": "GET",
+        "path": "/api/tasks/task-1/comments"
+      },
+      "response": {
+        "body": [
+          {
+            "authorId": "user-1",
+            "body": "Revisar los criterios de aceptación.",
+            "createdAt": "2026-11-16T12:00:00.000Z",
+            "id": "comment-1",
+            "taskId": "task-1"
+          }
+        ],
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$[*].authorId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^user-\\d+$"
+                }
+              ]
+            },
+            "$[*].body": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$[*].createdAt": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+([+-][0-2]\\d(:?[0-5]\\d)?|Z)$"
+                }
+              ]
+            },
+            "$[*].id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^comment-\\d+$"
+                }
+              ]
+            },
+            "$[*].taskId": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^task-\\d+$"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "un POST válido a /api/auth/login",
+      "providerStates": [
+        {
+          "name": "ana tiene credenciales válidas"
+        }
+      ],
+      "request": {
+        "body": {
+          "email": "ana.contract@test.com",
+          "password": "Password1"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "method": "POST",
+        "path": "/api/auth/login"
+      },
+      "response": {
+        "body": {
+          "token": "header.payload.signature",
+          "user": {
+            "email": "ana.contract@test.com",
+            "id": "user-1",
+            "name": "Ana"
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.token": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$"
+                }
+              ]
+            },
+            "$.user.id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^user-\\d+$"
+                }
+              ]
+            },
+            "$.user.name": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
     }
   ],
   "metadata": {
