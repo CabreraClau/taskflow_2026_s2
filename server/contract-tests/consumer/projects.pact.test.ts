@@ -1,19 +1,9 @@
 import path from 'path';
 import { MatchersV3, PactV3 } from '@pact-foundation/pact';
+import type { Project } from '../../../client/src/types';
+import { api, withBrowserApi } from './browser-api';
 
 const { like, eachLike } = MatchersV3;
-
-// Reproduce api<Project[]>('/projects'): el helper del navegador depende
-// de localStorage y de una URL relativa, por lo que no corre en Node.
-async function getProjects(baseUrl: string, token: string) {
-  const res = await fetch(`${baseUrl}/api/projects`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return {
-    status: res.status,
-    body: (await res.json()) as Array<{ name: string }>,
-  };
-}
 
 const pact = new PactV3({
   consumer: 'TaskFlowWeb',
@@ -43,10 +33,11 @@ describe('Contrato: lista de proyectos', () => {
       });
 
     await pact.executeTest(async (mockServer) => {
-      const { status, body } = await getProjects(mockServer.url, 'token-de-prueba');
-      expect(status).toBe(200);
-      expect(body.length).toBeGreaterThan(0);
-      expect(body[0]).toHaveProperty('name');
+      await withBrowserApi(mockServer.url, 'token-de-prueba', async () => {
+        const projects = await api<Project[]>('/projects');
+        expect(projects.length).toBeGreaterThan(0);
+        expect(projects[0]).toHaveProperty('name');
+      });
     });
   });
 });

@@ -1,4 +1,5 @@
 import { expect, type APIRequestContext, type Page } from '@playwright/test';
+import { TaskCard } from './components/TaskCard';
 
 /**
  * Helpers reutilizables para los tests E2E.
@@ -90,7 +91,9 @@ export async function crearProyectoYTarea(
   expect(resTarea.status()).toBe(201);
   const tarea = (await resTarea.json()) as { id: string };
 
-  await expect(page.getByTestId('task-card-title').filter({ hasText: tituloTarea })).toBeVisible();
+  const card = new TaskCard(page, tarea.id);
+  await expect(card.root).toBeVisible();
+  await expect(card.title).toHaveText(tituloTarea);
   return { projectId: proyecto.id, projectName, taskId: tarea.id, taskTitle: tituloTarea };
 }
 
@@ -104,7 +107,7 @@ export async function crearProyectoYTarea(
  * justo después. Esperamos a que termine la segunda carga antes de devolver el
  * control al test.
  */
-export async function abrirTarea(page: Page, titulo: string, taskId?: string): Promise<void> {
+export async function abrirTarea(page: Page, titulo: string, taskId: string): Promise<void> {
   let cargas = 0;
   let resolverSegunda: () => void = () => undefined;
   const segundaCarga = new Promise<void>((resolve) => {
@@ -112,7 +115,6 @@ export async function abrirTarea(page: Page, titulo: string, taskId?: string): P
   });
 
   const onResponse = (r: import('@playwright/test').Response): void => {
-    if (!taskId) return;
     if (r.request().method() === 'GET' && r.url().endsWith(`/api/tasks/${taskId}`)) {
       cargas += 1;
       if (cargas >= 2) {
@@ -123,7 +125,9 @@ export async function abrirTarea(page: Page, titulo: string, taskId?: string): P
   };
   page.on('response', onResponse);
 
-  await page.getByTestId('task-card-title').filter({ hasText: titulo }).click();
+  const card = new TaskCard(page, taskId);
+  await expect(card.title).toHaveText(titulo);
+  await card.open();
   await expect(page.getByTestId('task-detail-page')).toBeVisible();
 
   // En un build de producción sólo hay una carga: no esperamos para siempre.
