@@ -1,52 +1,14 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, test, type APIRequestContext, type Page } from '@playwright/test';
-import { randomUUID } from 'node:crypto';
-import { mkdirSync, writeFileSync } from 'node:fs';
-import path from 'node:path';
+import type { Page } from '@playwright/test';
+import { expect, test, type AccessibilityScenario } from '../../fixtures';
+import { login } from '../../helpers';
 
 // Adaptación para este fork: Login y Registro comparten /login; el detalle
 // de proyecto es el tablero /projects/:id. Extendemos a Detalle de tarea,
 // donde se encontró la regla label. No se necesita una cuenta del seed.
 const VERIFICAR = { regla: 'label', vistas: ['Detalle de tarea'] };
 const phase = process.env.A11Y_PHASE === 'before' ? 'before' : 'after';
-const evidenceDir = path.resolve('docs/evidence/m2');
-const password = 'Password1';
-
-function evidence(file: string, data: unknown) {
-  mkdirSync(evidenceDir, { recursive: true });
-  writeFileSync(path.join(evidenceDir, file), JSON.stringify(data, null, 2) + '\n');
-}
-
-async function fixture(request: APIRequestContext) {
-  const email = `a11y-${randomUUID()}@example.test`;
-  const registration = await request.post('/api/auth/register', {
-    data: { email, password, name: 'Auditoría accesibilidad' },
-  });
-  expect(registration.status()).toBe(201);
-  const { token } = await registration.json();
-  const headers = { Authorization: `Bearer ${token}` };
-  const projectResponse = await request.post('/api/projects', {
-    headers, data: { name: `Proyecto accesibilidad ${randomUUID()}` },
-  });
-  expect(projectResponse.status()).toBe(201);
-  const project = await projectResponse.json();
-  const taskResponse = await request.post(`/api/projects/${project.id}/tasks`, {
-    headers, data: { title: 'Tarea para auditoría de accesibilidad' },
-  });
-  expect(taskResponse.status()).toBe(201);
-  const task = await taskResponse.json();
-  return { email, project, task };
-}
-
-async function login(page: Page, email: string) {
-  await page.goto('/login');
-  await page.getByTestId('login-email-input').fill(email);
-  await page.getByTestId('login-password-input').fill(password);
-  await page.getByTestId('login-submit').click();
-  await expect(page.getByTestId('projects-page')).toBeVisible();
-}
-
-async function detail(page: Page, f: Awaited<ReturnType<typeof fixture>>) {
+async function detail(page: Page, f: AccessibilityScenario) {
   await page.goto(`/projects/${f.project.id}/tasks/${f.task.id}`);
   await expect(page.getByTestId('task-detail-page')).toBeVisible();
   await expect(page.getByTestId('tag-add-input')).toBeVisible();
@@ -54,8 +16,7 @@ async function detail(page: Page, f: Awaited<ReturnType<typeof fixture>>) {
   await expect(page.getByTestId('loading')).toHaveCount(0);
 }
 
-test('a11y informe WCAG 2.1 A y AA en cinco vistas', async ({ page, request }) => {
-  const f = await fixture(request);
+test('a11y informe WCAG 2.1 A y AA en cinco vistas', async ({ page, accessibilityScenario: f, evidence }, testInfo) => {
   const views: unknown[] = [];
   async function scan(name: string) {
     const result = await new AxeBuilder({ page })
@@ -75,7 +36,7 @@ test('a11y informe WCAG 2.1 A y AA en cinco vistas', async ({ page, request }) =
   await page.getByTestId('login-mode-toggle').click();
   await expect(page.getByTestId('login-name-input')).toBeVisible();
   await scan('Registro');
-  await login(page, f.email);
+  await login(page, f.email, f.password);
   await expect(page.getByTestId('project-card-name')).toHaveCount(1);
   await scan('Proyectos');
   await page.getByTestId('project-card-name').click();
@@ -84,17 +45,18 @@ test('a11y informe WCAG 2.1 A y AA en cinco vistas', async ({ page, request }) =
   await scan('Detalle de proyecto');
   await detail(page, f);
   await scan('Detalle de tarea');
-  await page.screenshot({ path: path.join(evidenceDir, `a11y-${phase}-detail.png`), fullPage: true });
-  evidence(`a11y-${phase}.json`, { phase, engine: 'axe-core', scope: 'WCAG 2.1 A/AA', views });
+  const screenshot = testInfo.outputPath(`a11y-${phase}-detail.png`);
+  await page.screenshot({ path: screenshot, fullPage: true });
+  await testInfo.attach('detalle', { path: screenshot, contentType: 'image/png' });
+  await evidence(`a11y-${phase}.json`, { phase, engine: 'axe-core', scope: 'WCAG 2.1 A/AA', views });
   // El informe no afirma conformidad: se complementa con revisión manual.
 });
 
-test('a11y verificación de la corrección label en detalle de tarea', async ({ page, request }) => {
-  const f = await fixture(request);
-  await login(page, f.email);
+test('a11y verificación de la corrección label en detalle de tarea', async ({ page, accessibilityScenario: f, evidence }) => {
+  await login(page, f.email, f.password);
   await detail(page, f);
   const result = await new AxeBuilder({ page }).withRules([VERIFICAR.regla]).analyze();
-  evidence(`verification-${phase}.json`, {
+  await evidence(`verification-${phase}.json`, {
     rule: VERIFICAR.regla, views: VERIFICAR.vistas,
     violations: result.violations,
   });
@@ -103,8 +65,7 @@ test('a11y verificación de la corrección label en detalle de tarea', async ({ 
   await expect(page.getByTestId('comment-add-input')).toHaveAccessibleName('Comentario');
 });
 
-test('a11y revisión complementaria de teclado idioma errores y CSS', async ({ page, request }) => {
-  const f = await fixture(request);
+test('a11y revisión complementaria de teclado idioma errores y CSS', async ({ page, accessibilityScenario: f, evidence }) => {
   await page.goto('/login');
   const input = page.getByTestId('login-email-input');
   const css = await input.evaluate((element) => {
@@ -130,7 +91,7 @@ test('a11y revisión complementaria de teclado idioma errores y CSS', async ({ p
   await expect(alert).toBeVisible();
   const error = { text: await alert.innerText(), role: await alert.getAttribute('role') };
   const language = await page.locator('html').getAttribute('lang');
-  await login(page, f.email);
+  await login(page, f.email, f.password);
   // Una navegación nueva deja el foco inicial en el documento; sólo Tab y
   // Enter se usan para alcanzar y activar el proyecto desde aquí.
   await page.goto('/projects');
@@ -145,19 +106,18 @@ test('a11y revisión complementaria de teclado idioma errores y CSS', async ({ p
   expect(reached).toBe(true);
   await page.keyboard.press('Enter');
   await expect(page.getByTestId('board-page')).toBeVisible();
-  evidence(`manual-${phase}.json`, {
+  await evidence(`manual-${phase}.json`, {
     method: 'Revisión del DOM y CSS, con navegación Tab/Enter automatizada; no se simuló un lector de pantalla',
     css, purposes, language, error,
     keyboard: { reachedProjectWithTab: reached, tabCount: tabs, enterOpenedBoard: true },
   });
 });
 
-test('seguridad XSS almacenado se representa como texto en tablero y detalle', async ({ page, request }) => {
-  const f = await fixture(request);
+test('seguridad XSS almacenado se representa como texto en tablero y detalle', async ({ page, accessibilityScenario: f, evidence }) => {
   const payload = '<img src=x onerror=alert(1)>';
   const dialogs: string[] = [];
   page.on('dialog', async (dialog) => { dialogs.push(dialog.message()); await dialog.dismiss(); });
-  await login(page, f.email);
+  await login(page, f.email, f.password);
   await page.getByTestId('project-card-name').click();
   await expect(page.getByTestId('board-page')).toBeVisible();
   await page.getByTestId('task-create-title-input').fill(payload);
@@ -172,5 +132,5 @@ test('seguridad XSS almacenado se representa como texto en tablero y detalle', a
   await expect(page.getByTestId('task-title-input')).toHaveValue(payload);
   await expect(page.locator('img[onerror]')).toHaveCount(0);
   expect(dialogs).toEqual([]);
-  evidence('xss-ui.json', { expectedBeforeExecution: 'React debe representar el título como texto; no insertar una imagen ni ejecutar alert', payload, boardShowsLiteral: true, detailShowsLiteral: true, injectedImages: 0, dialogs });
+  await evidence('xss-ui.json', { expectedBeforeExecution: 'React debe representar el título como texto; no insertar una imagen ni ejecutar alert', payload, boardShowsLiteral: true, detailShowsLiteral: true, injectedImages: 0, dialogs });
 });

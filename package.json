@@ -13,6 +13,8 @@
     "db:setup": "npm --prefix server run db:setup",
     "db:reset": "npm --prefix server run db:reset",
     "test": "npm --prefix server test",
+    "test:e2e": "playwright test",
+    "typecheck:e2e": "node server/node_modules/typescript/bin/tsc --project tsconfig.e2e.json",
     "test:a11y": "playwright test a11y --project=chromium --reporter=list --output=.audit/playwright",
     "test:security": "node security/http-security-audit.cjs",
     "test:coverage": "npm --prefix server run test:coverage",

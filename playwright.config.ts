@@ -3,10 +3,10 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * Configuración de los tests E2E (Playwright) de TaskFlow.
  *
- * Requisitos previos: la base de datos tiene que estar sembrada. Antes de
- * correr los tests ejecutá `npm run db:reset` una vez. El `webServer` levanta
- * la API (puerto 3000) y el cliente Vite (puerto 5173) automáticamente; si ya
- * los tenés corriendo con `npm run dev`, se reutilizan.
+ * npm run test:e2e prepara una SQLite temporal vacía mediante migraciones.
+ * Las fixtures crean los datos de cada caso, sin seed ni db:reset.
+ * API 3100 y Vite 5174 son exclusivos del test: un servidor existente provoca
+ * un error de arranque, para no ejecutar la suite contra datos de desarrollo.
  */
 export default defineConfig({
   testDir: './e2e',
@@ -15,11 +15,12 @@ export default defineConfig({
   workers: 1,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 1,
-  reporter: [['list'], ['html', { open: 'never' }]],
+  outputDir: '.audit/playwright/test-results',
+  reporter: [['list'], ['html', { open: 'never', outputFolder: '.audit/playwright/report' }]],
   timeout: 45_000,
   expect: { timeout: 10_000 },
   use: {
-    baseURL: 'http://localhost:5173',
+    baseURL: 'http://127.0.0.1:5174',
     // Fijamos una zona horaria UTC-3 para que el bug de fechas de US-16 sea
     // reproducible en cualquier máquina.
     timezoneId: 'America/Montevideo',
@@ -35,17 +36,21 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: 'npm run dev:server',
-      url: 'http://localhost:3000/api/health',
-      reuseExistingServer: !process.env.CI,
+      command: 'node e2e/support/start-api.cjs',
+      url: 'http://127.0.0.1:3100/api/health',
+      reuseExistingServer: false,
+      gracefulShutdown: { signal: 'SIGTERM', timeout: 5_000 },
       timeout: 120_000,
       env: { TZ: 'America/Montevideo' },
+      stdout: 'pipe',
     },
     {
-      command: 'npm run dev:client',
-      url: 'http://localhost:5173',
-      reuseExistingServer: !process.env.CI,
+      command: 'npm --prefix client run dev -- --host 127.0.0.1 --port 5174 --strictPort',
+      url: 'http://127.0.0.1:5174',
+      reuseExistingServer: false,
+      gracefulShutdown: { signal: 'SIGTERM', timeout: 5_000 },
       timeout: 120_000,
+      env: { TASKFLOW_API_URL: 'http://127.0.0.1:3100' },
     },
   ],
 });

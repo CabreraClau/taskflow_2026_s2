@@ -1,11 +1,8 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import {
   abrirTarea,
   auth,
   crearProyectoYTarea,
-  loginApi,
-  registrarUsuarioNuevo,
-  tokenActual,
 } from './helpers';
 
 /**
@@ -15,9 +12,8 @@ import {
  * (los campos ausentes conservan su valor).
  */
 test.describe('US-12 · Editar tarea', () => {
-  test('US-12 c1 · Editar el título de una tarea lo actualiza', async ({ page }) => {
+  test('US-12 c1 · Editar el título de una tarea lo actualiza', async ({ authenticatedPage: page }) => {
     // Arrange
-    await registrarUsuarioNuevo(page);
     const { taskId, taskTitle } = await crearProyectoYTarea(page, 'Tarea original');
     await abrirTarea(page, taskTitle, taskId);
 
@@ -37,9 +33,8 @@ test.describe('US-12 · Editar tarea', () => {
     await expect(page.getByTestId('task-title-input')).toHaveValue(nuevoTitulo);
   });
 
-  test('US-12 c2 · Un título de menos de 3 caracteres devuelve 400', async ({ page }) => {
+  test('US-12 c2 · Un título de menos de 3 caracteres devuelve 400', async ({ authenticatedPage: page }) => {
     // Arrange
-    await registrarUsuarioNuevo(page);
     const { taskId, taskTitle } = await crearProyectoYTarea(page, 'Tarea con título corto');
     await abrirTarea(page, taskTitle, taskId);
 
@@ -59,10 +54,9 @@ test.describe('US-12 · Editar tarea', () => {
   });
 
   test('US-12 c6 · Editar solo la descripción conserva el título y la prioridad', async ({
-    page,
+    authenticatedPage: page,
   }) => {
     // Arrange: la tarea arranca con prioridad HIGH
-    await registrarUsuarioNuevo(page);
     const { taskId, taskTitle } = await crearProyectoYTarea(page, 'Tarea con prioridad', 'HIGH');
     await abrirTarea(page, taskTitle, taskId);
 
@@ -83,16 +77,14 @@ test.describe('US-12 · Editar tarea', () => {
   });
 
   test('US-12 c5 · Un usuario ajeno al proyecto no puede editar la tarea (403)', async ({
-    page,
+    authenticatedPage: page, outsider,
   }) => {
-    // Arrange: caro@test.com NO es miembro del proyecto
-    await registrarUsuarioNuevo(page);
+    // Arrange: la cuenta ajena es nueva y no pertenece al proyecto
     const { taskId } = await crearProyectoYTarea(page, 'Tarea protegida');
-    const caro = await loginApi(page.request, 'caro@test.com');
 
     // Act
     const res = await page.request.patch(`/api/tasks/${taskId}`, {
-      headers: auth(caro.token),
+      headers: auth(outsider.token),
       data: { title: 'Cambiado por un ajeno' },
     });
 

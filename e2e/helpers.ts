@@ -1,42 +1,14 @@
-import { expect, type APIRequestContext, type Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 import { TaskCard } from './components/TaskCard';
+import { projectData, taskData, TEST_PASSWORD, type Priority } from './data/test-data';
 
 /**
- * Helpers reutilizables para los tests E2E.
- *
- * Cada test es independiente: registra su propio usuario con un email único y
- * crea sus propios proyectos y tareas. Así los tests pueden correr en
- * cualquier orden.
+ * Acciones de UI compartidas. Las fixtures preparan las cuentas y la sesión;
+ * los helpers mantienen visibles las operaciones funcionales de cada historia.
  */
-
-export const PASSWORD = 'Password1';
-
-/** Sufijo único para emails y nombres de proyecto. */
-export function sufijoUnico(): string {
-  return `${Date.now()}-${Math.floor(Math.random() * 1_000_000)}`;
-}
-
-/**
- * Arrange: registra un usuario nuevo desde la UI y queda logueado en /projects.
- * Devuelve el email usado.
- */
-export async function registrarUsuarioNuevo(page: Page, email?: string): Promise<string> {
-  const mail = email ?? `e2e-${sufijoUnico()}@test.com`;
-  await page.goto('/login');
-  await page.getByTestId('login-mode-toggle').click();
-  await page.getByTestId('login-email-input').fill(mail);
-  await page.getByTestId('login-password-input').fill(PASSWORD);
-  const respuesta = page.waitForResponse(
-    (r) => r.url().includes('/api/auth/register') && r.request().method() === 'POST',
-  );
-  await page.getByTestId('login-submit').click();
-  expect((await respuesta).status()).toBe(201);
-  await expect(page.getByTestId('projects-page')).toBeVisible();
-  return mail;
-}
 
 /** Arrange: inicia sesión con un usuario existente y espera /projects. */
-export async function login(page: Page, email: string, password: string = PASSWORD): Promise<void> {
+export async function login(page: Page, email: string, password: string = TEST_PASSWORD): Promise<void> {
   await page.goto('/login');
   await page.getByTestId('login-email-input').fill(email);
   await page.getByTestId('login-password-input').fill(password);
@@ -57,16 +29,17 @@ export interface ProyectoYTarea {
 
 /**
  * Arrange: desde /projects crea un proyecto nuevo, entra al tablero y crea una
- * tarea. Devuelve los ids/namas para usar en el Act/Assert.
+ * tarea. Devuelve los ids/nombres para usar en el Act/Assert.
  */
 export async function crearProyectoYTarea(
   page: Page,
   tituloTarea: string,
-  prioridad?: string,
+  prioridad?: Priority,
 ): Promise<ProyectoYTarea> {
   await expect(page.getByTestId('projects-page')).toBeVisible();
 
-  const projectName = `Proyecto E2E ${sufijoUnico()}`;
+  const { name: projectName } = projectData();
+  const task = taskData({ title: tituloTarea, priority: prioridad });
   await page.getByTestId('project-name-input').fill(projectName);
   const respuestaProyecto = page.waitForResponse(
     (r) => /\/api\/projects$/.test(r.url()) && r.request().method() === 'POST',
@@ -79,9 +52,9 @@ export async function crearProyectoYTarea(
   await page.getByTestId('project-card-name').filter({ hasText: projectName }).click();
   await expect(page.getByTestId('board-page')).toBeVisible();
 
-  await page.getByTestId('task-create-title-input').fill(tituloTarea);
-  if (prioridad) {
-    await page.getByTestId('task-create-priority-select').selectOption(prioridad);
+  await page.getByTestId('task-create-title-input').fill(task.title);
+  if (task.priority) {
+    await page.getByTestId('task-create-priority-select').selectOption(task.priority);
   }
   const respuestaTarea = page.waitForResponse(
     (r) => /\/api\/projects\/proj-\d+\/tasks$/.test(r.url()) && r.request().method() === 'POST',
@@ -162,16 +135,4 @@ export async function tokenActual(page: Page): Promise<string> {
 
 export function auth(token: string): { Authorization: string } {
   return { Authorization: `Bearer ${token}` };
-}
-
-/** Login directo contra la API (para tests de autorización que la UI no permite disparar). */
-export async function loginApi(
-  request: APIRequestContext,
-  email: string,
-  password: string = PASSWORD,
-): Promise<{ token: string; userId: string }> {
-  const res = await request.post('/api/auth/login', { data: { email, password } });
-  expect(res.status()).toBe(200);
-  const body = (await res.json()) as { token: string; user: { id: string } };
-  return { token: body.token, userId: body.user.id };
 }

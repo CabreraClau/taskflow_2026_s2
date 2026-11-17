@@ -1,0 +1,213 @@
+Check: integrated
+UTC start: 2026-11-17T22:53:10.075749+00:00
+Exit code: 1
+Command: node node_modules/playwright/cli.js test --project=chromium --retries=0 --reporter=list,json --output=<repo>/.audit/adr-playwright/integrated-artifacts
+
+[WebServer] Prisma schema loaded from prisma/schema.prisma
+[WebServer] Datasource "db": SQLite database "e2e.db" at "file:<temporary-db>/e2e.db"
+[WebServer] 
+[WebServer] 1 migration found in prisma/migrations
+[WebServer] 
+[WebServer] Applying migration `20260831232621_init`
+[WebServer] 
+[WebServer] The following migration(s) have been applied:
+[WebServer] 
+[WebServer] migrations/
+[WebServer]   └─ 20260831232621_init/
+[WebServer]     └─ migration.sql
+[WebServer]       
+[WebServer] All migrations have been successfully applied.
+[WebServer] E2E: SQLite temporal preparada con migraciones, sin seed.
+[WebServer] TaskFlow API escuchando en http://localhost:3100/api
+
+Running 22 tests using 1 worker
+
+(node:94811) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Login: 0 regla(s) WCAG violada(s)
+Registro: 0 regla(s) WCAG violada(s)
+Proyectos: 0 regla(s) WCAG violada(s)
+Detalle de proyecto: 0 regla(s) WCAG violada(s)
+Detalle de tarea: 0 regla(s) WCAG violada(s)
+  ✓   1 [chromium] › e2e/playwright/tests/a11y.spec.ts:19:1 › a11y informe WCAG 2.1 A y AA en cinco vistas (1.4s)
+  ✓   2 [chromium] › e2e/playwright/tests/a11y.spec.ts:55:1 › a11y verificación de la corrección label en detalle de tarea (436ms)
+  ✓   3 [chromium] › e2e/playwright/tests/a11y.spec.ts:68:1 › a11y revisión complementaria de teclado idioma errores y CSS (499ms)
+  ✓   4 [chromium] › e2e/playwright/tests/a11y.spec.ts:116:1 › seguridad XSS almacenado se representa como texto en tablero y detalle (415ms)
+  ✓   5 [chromium] › e2e/us12-editar.spec.ts:15:3 › US-12 · Editar tarea › US-12 c1 · Editar el título de una tarea lo actualiza (559ms)
+  ✓   6 [chromium] › e2e/us12-editar.spec.ts:36:3 › US-12 · Editar tarea › US-12 c2 · Un título de menos de 3 caracteres devuelve 400 (544ms)
+  ✓   7 [chromium] › e2e/us12-editar.spec.ts:56:3 › US-12 · Editar tarea › US-12 c6 · Editar solo la descripción conserva el título y la prioridad (560ms)
+  ✘   8 [chromium] › e2e/us12-editar.spec.ts:79:3 › US-12 · Editar tarea › US-12 c5 · Un usuario ajeno al proyecto no puede editar la tarea (403) (398ms)
+(node:94859) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   9 [chromium] › e2e/us14-asignar.spec.ts:19:3 › US-14 · Asignar tarea a un miembro › US-14 c1/c5 · Asignar la tarea a un miembro la deja asignada sin cambiar el estado (793ms)
+  ✓  10 [chromium] › e2e/us14-asignar.spec.ts:47:3 › US-14 · Asignar tarea a un miembro › US-14 c1 · Asignar la tarea a alguien ajeno al proyecto devuelve 400 (413ms)
+  ✓  11 [chromium] › e2e/us14-asignar.spec.ts:62:3 › US-14 · Asignar tarea a un miembro › US-14 c2/c5 · Reasignar por UI actualiza sólo la tarjeta elegida y persiste al recargar (1.2s)
+  ✓  12 [chromium] › e2e/us14-asignar.spec.ts:120:3 › US-14 · Asignar tarea a un miembro › US-14 c3 · Se puede desasignar la tarea dejando el asignado en nulo (833ms)
+  ✓  13 [chromium] › e2e/us14-asignar.spec.ts:149:3 › US-14 · Asignar tarea a un miembro › US-14 c4 · Un miembro que no es owner también puede asignar la tarea (808ms)
+  ✘  14 [chromium] › e2e/us15-etiquetas.spec.ts:11:3 › US-15 · Etiquetar tareas › US-15 c1 · Al agregar la etiqueta "Backend" se guarda normalizada a minúsculas (10.6s)
+(node:94929) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  15 [chromium] › e2e/us15-etiquetas.spec.ts:32:3 › US-15 · Etiquetar tareas › US-15 c2 · Agregar "Bug" y luego "BUG" no crea dos etiquetas distintas (10.7s)
+(node:94963) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  16 [chromium] › e2e/us15-etiquetas.spec.ts:59:3 › US-15 · Etiquetar tareas › US-15 c3 · Agregar la misma etiqueta dos veces devuelve 200 y no genera duplicados (10.7s)
+(node:94985) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  17 [chromium] › e2e/us15-etiquetas.spec.ts:86:3 › US-15 · Etiquetar tareas › US-15 c4 · Una etiqueta de más de 30 caracteres devuelve 400 y no se agrega (588ms)
+  ✓  18 [chromium] › e2e/us15-etiquetas.spec.ts:109:3 › US-15 · Etiquetar tareas › US-15 c5 · La tarea admite 10 etiquetas y la número 11 devuelve 400 (1.3s)
+  ✘  19 [chromium] › e2e/us16-vencimiento.spec.ts:16:3 › US-16 · Fecha de vencimiento › US-16 c2/c3 · La fecha cargada se devuelve igual, sin corrimiento por zona horaria (628ms)
+(node:94998) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  20 [chromium] › e2e/us16-vencimiento.spec.ts:38:3 › US-16 · Fecha de vencimiento › US-16 c7 · Se admite cargar una fecha de vencimiento pasada (586ms)
+  ✓  21 [chromium] › e2e/us16-vencimiento.spec.ts:57:3 › US-16 · Fecha de vencimiento › US-16 c5 · Se puede quitar la fecha de vencimiento enviándola vacía (638ms)
+  ✓  22 [chromium] › e2e/us16-vencimiento.spec.ts:85:3 › US-16 · Fecha de vencimiento › US-16 c6 · Una fecha con formato inválido devuelve 400 (401ms)
+
+
+  1) [chromium] › e2e/us12-editar.spec.ts:79:3 › US-12 · Editar tarea › US-12 c5 · Un usuario ajeno al proyecto no puede editar la tarea (403) 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 403
+    Received: 200
+
+      90 |
+      91 |     // Assert: la spec US-12 c5 exige 403
+    > 92 |     expect(res.status()).toBe(403);
+         |                          ^
+      93 |   });
+      94 | });
+      95 |
+        at <repo>/e2e/us12-editar.spec.ts:92:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .audit/adr-playwright/integrated-artifacts/us12-editar-US-12-·-Editar-d4b6b--puede-editar-la-tarea-403--chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .audit/adr-playwright/integrated-artifacts/us12-editar-US-12-·-Editar-d4b6b--puede-editar-la-tarea-403--chromium/error-context.md
+
+  2) [chromium] › e2e/us15-etiquetas.spec.ts:11:3 › US-15 · Etiquetar tareas › US-15 c1 · Al agregar la etiqueta "Backend" se guarda normalizada a minúsculas 
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  getByTestId('tag-chip-name')
+    Expected: "backend"
+    Received: "Backend"
+    Timeout:  10000ms
+
+    Call log:
+      - Expect "toHaveText" getByTestId('tag-chip-name') with timeout 10000ms
+      - waiting for getByTestId('tag-chip-name')
+        24 × locator resolved to <span data-testid="tag-chip-name">Backend</span>
+           - unexpected value "Backend"
+
+
+      27 |     expect(res.status()).toBe(201);
+      28 |     await expect(page.getByTestId('tag-chip')).toHaveCount(1);
+    > 29 |     await expect(page.getByTestId('tag-chip-name')).toHaveText('backend');
+         |                                                     ^
+      30 |   });
+      31 |
+      32 |   test('US-15 c2 · Agregar "Bug" y luego "BUG" no crea dos etiquetas distintas', async ({
+        at <repo>/e2e/us15-etiquetas.spec.ts:29:53
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .audit/adr-playwright/integrated-artifacts/us15-etiquetas-US-15-·-Eti-88664-da-normalizada-a-minúsculas-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .audit/adr-playwright/integrated-artifacts/us15-etiquetas-US-15-·-Eti-88664-da-normalizada-a-minúsculas-chromium/error-context.md
+
+  3) [chromium] › e2e/us15-etiquetas.spec.ts:32:3 › US-15 · Etiquetar tareas › US-15 c2 · Agregar "Bug" y luego "BUG" no crea dos etiquetas distintas 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('tag-chip')
+    Expected: 1
+    Received: 2
+    Timeout:  10000ms
+
+    Call log:
+      - Expect "toHaveCount" getByTestId('tag-chip') with timeout 10000ms
+      - waiting for getByTestId('tag-chip')
+        - locator resolved to 0 elements
+        - unexpected value "0"
+        23 × locator resolved to 2 elements
+           - unexpected value "2"
+
+
+      53 |
+      54 |     // Assert: sigue habiendo exactamente una etiqueta y se llama "bug"
+    > 55 |     await expect(page.getByTestId('tag-chip')).toHaveCount(1);
+         |                                                ^
+      56 |     await expect(page.getByTestId('tag-chip-name')).toHaveText('bug');
+      57 |   });
+      58 |
+        at <repo>/e2e/us15-etiquetas.spec.ts:55:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .audit/adr-playwright/integrated-artifacts/us15-etiquetas-US-15-·-Eti-1f981-rea-dos-etiquetas-distintas-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .audit/adr-playwright/integrated-artifacts/us15-etiquetas-US-15-·-Eti-1f981-rea-dos-etiquetas-distintas-chromium/error-context.md
+
+  4) [chromium] › e2e/us15-etiquetas.spec.ts:59:3 › US-15 · Etiquetar tareas › US-15 c3 · Agregar la misma etiqueta dos veces devuelve 200 y no genera duplicados 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByTestId('tag-chip')
+    Expected: 1
+    Received: 2
+    Timeout:  10000ms
+
+    Call log:
+      - Expect "toHaveCount" getByTestId('tag-chip') with timeout 10000ms
+      - waiting for getByTestId('tag-chip')
+        - locator resolved to 0 elements
+        - unexpected value "0"
+        23 × locator resolved to 2 elements
+           - unexpected value "2"
+
+
+      80 |
+      81 |     // Assert: no se duplica la etiqueta y la API responde 200
+    > 82 |     await expect(page.getByTestId('tag-chip')).toHaveCount(1);
+         |                                                ^
+      83 |     expect(res.status()).toBe(200);
+      84 |   });
+      85 |
+        at <repo>/e2e/us15-etiquetas.spec.ts:82:48
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .audit/adr-playwright/integrated-artifacts/us15-etiquetas-US-15-·-Eti-0d66c--200-y-no-genera-duplicados-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .audit/adr-playwright/integrated-artifacts/us15-etiquetas-US-15-·-Eti-0d66c--200-y-no-genera-duplicados-chromium/error-context.md
+
+  5) [chromium] › e2e/us16-vencimiento.spec.ts:16:3 › US-16 · Fecha de vencimiento › US-16 c2/c3 · La fecha cargada se devuelve igual, sin corrimiento por zona horaria 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "2026-09-15"
+    Received: "2026-09-14"
+
+      32 |     expect(res.status()).toBe(200);
+      33 |     const body = (await res.json()) as { dueDate: string | null };
+    > 34 |     expect(body.dueDate).toBe('2026-09-15');
+         |                          ^
+      35 |     await expect(page.getByTestId('task-duedate-value')).toHaveText('2026-09-15');
+      36 |   });
+      37 |
+        at <repo>/e2e/us16-vencimiento.spec.ts:34:26
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    .audit/adr-playwright/integrated-artifacts/us16-vencimiento-US-16-·-F-2438c-orrimiento-por-zona-horaria-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: .audit/adr-playwright/integrated-artifacts/us16-vencimiento-US-16-·-F-2438c-orrimiento-por-zona-horaria-chromium/error-context.md
+
+  5 failed
+    [chromium] › e2e/us12-editar.spec.ts:79:3 › US-12 · Editar tarea › US-12 c5 · Un usuario ajeno al proyecto no puede editar la tarea (403) 
+    [chromium] › e2e/us15-etiquetas.spec.ts:11:3 › US-15 · Etiquetar tareas › US-15 c1 · Al agregar la etiqueta "Backend" se guarda normalizada a minúsculas 
+    [chromium] › e2e/us15-etiquetas.spec.ts:32:3 › US-15 · Etiquetar tareas › US-15 c2 · Agregar "Bug" y luego "BUG" no crea dos etiquetas distintas 
+    [chromium] › e2e/us15-etiquetas.spec.ts:59:3 › US-15 · Etiquetar tareas › US-15 c3 · Agregar la misma etiqueta dos veces devuelve 200 y no genera duplicados 
+    [chromium] › e2e/us16-vencimiento.spec.ts:16:3 › US-16 · Fecha de vencimiento › US-16 c2/c3 · La fecha cargada se devuelve igual, sin corrimiento por zona horaria 
+  17 passed (48.0s)
