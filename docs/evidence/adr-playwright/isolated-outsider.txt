@@ -1,0 +1,32 @@
+Check: isolated-outsider
+UTC start: 2026-11-17T22:45:32.987239+00:00
+Exit code: 0
+Command: node node_modules/playwright/cli.js test --project=chromium --retries=0 --reporter=list,json --output=<repo>/.audit/adr-playwright/isolated-outsider-artifacts e2e/us14-asignar.spec.ts --grep US-14 c1 · Asignar la tarea a alguien --repeat-each=2
+
+[WebServer] Prisma schema loaded from prisma/schema.prisma
+[WebServer] Datasource "db": SQLite database "e2e.db" at "file:<temporary-db>/e2e.db"
+[WebServer] 
+[WebServer] 1 migration found in prisma/migrations
+[WebServer] 
+[WebServer] Applying migration `20260831232621_init`
+[WebServer] 
+[WebServer] The following migration(s) have been applied:
+[WebServer] 
+[WebServer] migrations/
+[WebServer]   └─ 20260831232621_init/
+[WebServer]     └─ migration.sql
+[WebServer]       
+[WebServer] All migrations have been successfully applied.
+[WebServer] E2E: SQLite temporal preparada con migraciones, sin seed.
+[WebServer] TaskFlow API escuchando en http://localhost:3100/api
+
+Running 2 tests using 1 worker
+
+(node:93876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/us14-asignar.spec.ts:47:3 › US-14 · Asignar tarea a un miembro › US-14 c1 · Asignar la tarea a alguien ajeno al proyecto devuelve 400 (594ms)
+(node:93891) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [chromium] › e2e/us14-asignar.spec.ts:47:3 › US-14 · Asignar tarea a un miembro › US-14 c1 · Asignar la tarea a alguien ajeno al proyecto devuelve 400 (408ms)
+
+  2 passed (2.9s)

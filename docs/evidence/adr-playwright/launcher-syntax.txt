@@ -1,0 +1,3 @@
+Command: node --check e2e/support/start-api.cjs
+Exit code: 0
+

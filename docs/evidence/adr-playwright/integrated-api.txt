@@ -1,0 +1,79 @@
+Check: integrated-api
+UTC start: 2026-11-17T22:53:10.603504+00:00
+Working directory: <repo>/server
+Command: node node_modules/jest/bin/jest.js --runInBand --coverage --json --outputFile=<repo>/.audit/refactor-auth/integrated-api-jest.json --coverageDirectory=<repo>/.audit/refactor-auth/integrated-api-coverage --coverageReporters=text --coverageReporters=json-summary
+Node: v24.22.1
+Timezone: America/Montevideo
+Exit code: 1
+
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": SQLite database "template.db" at "file:<repo>/server/tests/.tmp/template.db"
+
+🚀  Your database is now in sync with your Prisma schema. Done in 11ms
+
+FAIL tests/tasks.test.ts
+  ● Tareas › POST /api/projects/:projectId/tasks › crea las tareas siempre con estado inicial TODO aunque el cliente envie otro estado (US-05 c3) [BUG-08]
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "TODO"
+    Received: "DONE"
+
+      128 |       // Assert
+      129 |       expect(res.status).toBe(201);
+    > 130 |       expect(res.body.status).toBe('TODO');
+          |                               ^
+      131 |     });
+      132 |   });
+      133 |
+
+      at Object.<anonymous> (tests/tasks.test.ts:130:31)
+
+  ● Tareas › GET /api/projects/:projectId/tasks (filtros) › aplica status y priority simultaneamente al filtrar tareas (US-07 c5) [BUG-07]
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 2
+    Received array:  [{"assignee": null, "assigneeId": null, "commentCount": 0, "createdAt": "2026-11-17T22:53:13.361Z", "description": null, "dueDate": null, "id": "task-9", "priority": "HIGH", "projectId": "proj-11", "status": "TODO", "title": "Tarea TODO alta", "updatedAt": "2026-11-17T22:53:13.361Z"}, {"assignee": {"email": "task4@test.com", "id": "user-12"}, "assigneeId": "user-12", "commentCount": 0, "createdAt": "2026-11-17T22:53:13.365Z", "description": null, "dueDate": null, "id": "task-11", "priority": "HIGH", "projectId": "proj-11", "status": "IN_PROGRESS", "title": "Tarea en progreso alta", "updatedAt": "2026-11-17T22:53:13.366Z"}]
+
+      217 |       // Assert
+      218 |       expect(res.status).toBe(200);
+    > 219 |       expect(res.body.items).toHaveLength(1);
+          |                              ^
+      220 |       expect(res.body.items[0]).toMatchObject({ id: todoHigh.id, status: 'TODO', priority: 'HIGH' });
+      221 |     });
+      222 |   });
+
+      at Object.<anonymous> (tests/tasks.test.ts:219:30)
+
+FAIL tests/projects.test.ts
+  ● Proyectos › POST /api/projects › rechaza crear un proyecto con nombre demasiado corto (US-03 c1) [BUG-06]
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 400
+    Received: 201
+
+      69 |
+      70 |       // Assert
+    > 71 |       expect(res.status).toBe(400);
+         |                          ^
+      72 |       expect(res.body.error.code).toBe('VALIDATION_ERROR');
+      73 |     });
+      74 |
+
+      at Object.<anonymous> (tests/projects.test.ts:71:26)
+
+PASS tests/auth-policy.characterization.test.ts
+PASS tests/task-workflows.test.ts
+PASS tests/auth.test.ts
+PASS tests/project-workflows.test.ts
+PASS tests/comments.test.ts
+
+Test Suites: 2 failed, 5 passed, 7 total
+Tests:       3 failed, 43 passed, 46 total
+Snapshots:   0 total
+Time:        4.857 s
+Ran all test suites.
+Test results written to: ../.audit/refactor-auth/integrated-api-jest.json

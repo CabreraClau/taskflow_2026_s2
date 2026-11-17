@@ -1,0 +1,32 @@
+Check: isolated-reassign
+UTC start: 2026-11-17T22:44:32.668130+00:00
+Exit code: 0
+Command: node node_modules/playwright/cli.js test --project=chromium --retries=0 --reporter=list,json --output=<repo>/.audit/adr-playwright/isolated-reassign-artifacts e2e/us14-asignar.spec.ts --grep c2/c5 --repeat-each=2
+
+[WebServer] Prisma schema loaded from prisma/schema.prisma
+[WebServer] Datasource "db": SQLite database "e2e.db" at "file:<temporary-db>/e2e.db"
+[WebServer] 
+[WebServer] 1 migration found in prisma/migrations
+[WebServer] 
+[WebServer] Applying migration `20260831232621_init`
+[WebServer] 
+[WebServer] The following migration(s) have been applied:
+[WebServer] 
+[WebServer] migrations/
+[WebServer]   └─ 20260831232621_init/
+[WebServer]     └─ migration.sql
+[WebServer]       
+[WebServer] All migrations have been successfully applied.
+[WebServer] E2E: SQLite temporal preparada con migraciones, sin seed.
+[WebServer] TaskFlow API escuchando en http://localhost:3100/api
+
+Running 2 tests using 1 worker
+
+(node:93720) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/us14-asignar.spec.ts:62:3 › US-14 · Asignar tarea a un miembro › US-14 c2/c5 · Reasignar por UI actualiza sólo la tarjeta elegida y persiste al recargar (1.4s)
+(node:93786) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [chromium] › e2e/us14-asignar.spec.ts:62:3 › US-14 · Asignar tarea a un miembro › US-14 c2/c5 · Reasignar por UI actualiza sólo la tarjeta elegida y persiste al recargar (1.2s)
+
+  2 passed (4.5s)

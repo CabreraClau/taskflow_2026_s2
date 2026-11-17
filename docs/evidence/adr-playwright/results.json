@@ -1,0 +1,1151 @@
+{
+  "environment": {
+    "os": "macOS 26.6",
+    "architecture": "arm64",
+    "node": "24.22.1",
+    "npm": "10.9.3",
+    "playwright": "1.65.0",
+    "chromium_headless_shell": "158.0.8127.18",
+    "chromium_build": 1254,
+    "prisma": "6.19.3",
+    "timezone": "America/Montevideo",
+    "execution": "local"
+  },
+  "base_commit": "61930c4bcd642817d7240243ba4a87dbccf6719d",
+  "comparison": {
+    "identical_case_names_and_results": true,
+    "application_sources_and_task_card_unchanged": true,
+    "seed_used_before": true,
+    "seed_used_after": false,
+    "no_skipped_or_flaky_cases": true
+  },
+  "stages": [
+    {
+      "label": "before",
+      "started_at_utc": "2026-11-17T22:39:48.001569+00:00",
+      "exit_code": 1,
+      "base_commit": "61930c4bcd642817d7240243ba4a87dbccf6719d",
+      "file_sha256": {
+        "e2e/components/TaskCard.ts": "931b7af302a875eb4b69e12ee2a724e29108f9d107aaa5259493e635590f902f",
+        "e2e/helpers.ts": "4b010b9538354dff91c2c63b8751ba7d7535958b287e0bc7f2b9ef87449a3f4a",
+        "e2e/playwright/tests/a11y.spec.ts": "b74c8b46d5377ffedb8d4db11d99ca8a0334b8fa128117069f90ce870e86aa86",
+        "e2e/us12-editar.spec.ts": "8cbfe347d848b55e01c3bdbc8f1b89b8050dc401d11ace4d49a10b865066563a",
+        "e2e/us14-asignar.spec.ts": "f6568b5f04270ede274639f85d78b224c279971d267af4786a44457f43d62432",
+        "e2e/us15-etiquetas.spec.ts": "4a021a158e49a02e09fb002c423c5533cda348cfbf084a732543fd3dddc8d16b",
+        "e2e/us16-vencimiento.spec.ts": "ee38fe02550b2bf5bacd28edd1e1bf35ee2e363840cf75daa37ea7780fc96ac6"
+      },
+      "statistics": {
+        "startTime": "2026-11-17T22:39:48.865Z",
+        "duration": 53909.396,
+        "expected": 17,
+        "skipped": 0,
+        "unexpected": 5,
+        "flaky": 0
+      },
+      "cases": [
+        {
+          "file": "e2e/playwright/tests/a11y.spec.ts",
+          "title": "a11y informe WCAG 2.1 A y AA en cinco vistas",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 1745,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/playwright/tests/a11y.spec.ts",
+          "title": "a11y verificación de la corrección label en detalle de tarea",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 465,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/playwright/tests/a11y.spec.ts",
+          "title": "a11y revisión complementaria de teclado idioma errores y CSS",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 525,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/playwright/tests/a11y.spec.ts",
+          "title": "seguridad XSS almacenado se representa como texto en tablero y detalle",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 433,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us12-editar.spec.ts",
+          "title": "US-12 c1 · Editar el título de una tarea lo actualiza",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 629,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us12-editar.spec.ts",
+          "title": "US-12 c2 · Un título de menos de 3 caracteres devuelve 400",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 633,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us12-editar.spec.ts",
+          "title": "US-12 c6 · Editar solo la descripción conserva el título y la prioridad",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 631,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us12-editar.spec.ts",
+          "title": "US-12 c5 · Un usuario ajeno al proyecto no puede editar la tarea (403)",
+          "status": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration_ms": 470,
+              "errors": [
+                "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: 403\nReceived: 200\n\n   98 |\n   99 |     // Assert: la spec US-12 c5 exige 403\n> 100 |     expect(res.status()).toBe(403);\n      |                          ^\n  101 |   });\n  102 | });\n  103 |\n    at <repo>/.audit/adr-playwright/baseline/e2e/us12-editar.spec.ts:100:26"
+              ]
+            }
+          ]
+        },
+        {
+          "file": "e2e/us14-asignar.spec.ts",
+          "title": "US-14 c1/c5 · Asignar la tarea a un miembro la deja asignada sin cambiar el estado",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 834,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us14-asignar.spec.ts",
+          "title": "US-14 c1 · Asignar la tarea a alguien ajeno al proyecto devuelve 400",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 464,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us14-asignar.spec.ts",
+          "title": "US-14 c2/c5 · Reasignar por UI actualiza sólo la tarjeta elegida y persiste al recargar",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 1104,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us14-asignar.spec.ts",
+          "title": "US-14 c3 · Se puede desasignar la tarea dejando el asignado en nulo",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 1087,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us14-asignar.spec.ts",
+          "title": "US-14 c4 · Un miembro que no es owner también puede asignar la tarea",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 624,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us15-etiquetas.spec.ts",
+          "title": "US-15 c1 · Al agregar la etiqueta \"Backend\" se guarda normalizada a minúsculas",
+          "status": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration_ms": 10672,
+              "errors": [
+                "Error: expect(locator).toHaveText(expected) failed\n\nLocator:  getByTestId('tag-chip-name')\nExpected: \"backend\"\nReceived: \"Backend\"\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveText\" getByTestId('tag-chip-name') with timeout 10000ms\n  - waiting for getByTestId('tag-chip-name')\n    24 × locator resolved to <span data-testid=\"tag-chip-name\">Backend</span>\n       - unexpected value \"Backend\"\n\n\n  28 |     expect(res.status()).toBe(201);\n  29 |     await expect(page.getByTestId('tag-chip')).toHaveCount(1);\n> 30 |     await expect(page.getByTestId('tag-chip-name')).toHaveText('backend');\n     |                                                     ^\n  31 |   });\n  32 |\n  33 |   test('US-15 c2 · Agregar \"Bug\" y luego \"BUG\" no crea dos etiquetas distintas', async ({\n    at <repo>/.audit/adr-playwright/baseline/e2e/us15-etiquetas.spec.ts:30:53"
+              ]
+            }
+          ]
+        },
+        {
+          "file": "e2e/us15-etiquetas.spec.ts",
+          "title": "US-15 c2 · Agregar \"Bug\" y luego \"BUG\" no crea dos etiquetas distintas",
+          "status": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration_ms": 10710,
+              "errors": [
+                "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  getByTestId('tag-chip')\nExpected: 1\nReceived: 2\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveCount\" getByTestId('tag-chip') with timeout 10000ms\n  - waiting for getByTestId('tag-chip')\n    - locator resolved to 0 elements\n    - unexpected value \"0\"\n    23 × locator resolved to 2 elements\n       - unexpected value \"2\"\n\n\n  55 |\n  56 |     // Assert: sigue habiendo exactamente una etiqueta y se llama \"bug\"\n> 57 |     await expect(page.getByTestId('tag-chip')).toHaveCount(1);\n     |                                                ^\n  58 |     await expect(page.getByTestId('tag-chip-name')).toHaveText('bug');\n  59 |   });\n  60 |\n    at <repo>/.audit/adr-playwright/baseline/e2e/us15-etiquetas.spec.ts:57:48"
+              ]
+            }
+          ]
+        },
+        {
+          "file": "e2e/us15-etiquetas.spec.ts",
+          "title": "US-15 c3 · Agregar la misma etiqueta dos veces devuelve 200 y no genera duplicados",
+          "status": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration_ms": 10747,
+              "errors": [
+                "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  getByTestId('tag-chip')\nExpected: 1\nReceived: 2\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveCount\" getByTestId('tag-chip') with timeout 10000ms\n  - waiting for getByTestId('tag-chip')\n    - locator resolved to 0 elements\n    - unexpected value \"0\"\n    23 × locator resolved to 2 elements\n       - unexpected value \"2\"\n\n\n  83 |\n  84 |     // Assert: no se duplica la etiqueta y la API responde 200\n> 85 |     await expect(page.getByTestId('tag-chip')).toHaveCount(1);\n     |                                                ^\n  86 |     expect(res.status()).toBe(200);\n  87 |   });\n  88 |\n    at <repo>/.audit/adr-playwright/baseline/e2e/us15-etiquetas.spec.ts:85:48"
+              ]
+            }
+          ]
+        },
+        {
+          "file": "e2e/us15-etiquetas.spec.ts",
+          "title": "US-15 c4 · Una etiqueta de más de 30 caracteres devuelve 400 y no se agrega",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 644,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us15-etiquetas.spec.ts",
+          "title": "US-15 c5 · La tarea admite 10 etiquetas y la número 11 devuelve 400",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 1295,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us16-vencimiento.spec.ts",
+          "title": "US-16 c2/c3 · La fecha cargada se devuelve igual, sin corrimiento por zona horaria",
+          "status": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration_ms": 634,
+              "errors": [
+                "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"2026-09-15\"\nReceived: \"2026-09-14\"\n\n  34 |     expect(res.status()).toBe(200);\n  35 |     const body = (await res.json()) as { dueDate: string | null };\n> 36 |     expect(body.dueDate).toBe('2026-09-15');\n     |                          ^\n  37 |     await expect(page.getByTestId('task-duedate-value')).toHaveText('2026-09-15');\n  38 |   });\n  39 |\n    at <repo>/.audit/adr-playwright/baseline/e2e/us16-vencimiento.spec.ts:36:26"
+              ]
+            }
+          ]
+        },
+        {
+          "file": "e2e/us16-vencimiento.spec.ts",
+          "title": "US-16 c7 · Se admite cargar una fecha de vencimiento pasada",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 620,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us16-vencimiento.spec.ts",
+          "title": "US-16 c5 · Se puede quitar la fecha de vencimiento enviándola vacía",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 677,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us16-vencimiento.spec.ts",
+          "title": "US-16 c6 · Una fecha con formato inválido devuelve 400",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 441,
+              "errors": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "after",
+      "started_at_utc": "2026-11-17T22:42:45.995756+00:00",
+      "exit_code": 1,
+      "base_commit": "61930c4bcd642817d7240243ba4a87dbccf6719d",
+      "file_sha256": {
+        "e2e/components/TaskCard.ts": "931b7af302a875eb4b69e12ee2a724e29108f9d107aaa5259493e635590f902f",
+        "e2e/data/test-data.ts": "20690c61e89f6b9897918c99cc375f964e2cc0f8b7e4220ecd716f0d27cd729b",
+        "e2e/fixtures.ts": "27d79c2ad4bcd8d0b80b340579576aac87a753725ff055bdc6d612cfbe32cfb8",
+        "e2e/helpers.ts": "a59f5d5438bb0b2207d39bb3a67d41cbf070da20652e0cc4c2d674df45c13e17",
+        "e2e/playwright/tests/a11y.spec.ts": "c65bc8b18654bbf18201429379d3baadbdfd6c1984b6109aabc6afd1d8e0a81c",
+        "e2e/support/start-api.cjs": "4b43573e5f0121b501b6d3035ce3c18e5125ef65504170e20e1674d223ce1f88",
+        "e2e/us12-editar.spec.ts": "478a55f4d339b3c4695dd137d2eb92309ce40fd05a06e86274f0ae97db1b7fe2",
+        "e2e/us14-asignar.spec.ts": "3da73552254d68cdb963832e4faf75e485b9639dda436108f2e9619a29e83258",
+        "e2e/us15-etiquetas.spec.ts": "ea4b15cc1956f849a54ac298ff01e8cc87fae4753349d17c1db873690a4c7da8",
+        "e2e/us16-vencimiento.spec.ts": "3a80c200f865772ea4a3a1d2a03ff21d3c70456ec453f824f4cbabc53645b1c9"
+      },
+      "ambient_database_unchanged": true,
+      "historical_evidence_unchanged": true,
+      "temporary_database_directories_left": 0,
+      "statistics": {
+        "startTime": "2026-11-17T22:42:46.455Z",
+        "duration": 48118.263,
+        "expected": 17,
+        "skipped": 0,
+        "unexpected": 5,
+        "flaky": 0
+      },
+      "cases": [
+        {
+          "file": "e2e/playwright/tests/a11y.spec.ts",
+          "title": "a11y informe WCAG 2.1 A y AA en cinco vistas",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 1443,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/playwright/tests/a11y.spec.ts",
+          "title": "a11y verificación de la corrección label en detalle de tarea",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 488,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/playwright/tests/a11y.spec.ts",
+          "title": "a11y revisión complementaria de teclado idioma errores y CSS",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 502,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/playwright/tests/a11y.spec.ts",
+          "title": "seguridad XSS almacenado se representa como texto en tablero y detalle",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 472,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us12-editar.spec.ts",
+          "title": "US-12 c1 · Editar el título de una tarea lo actualiza",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 588,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us12-editar.spec.ts",
+          "title": "US-12 c2 · Un título de menos de 3 caracteres devuelve 400",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 583,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us12-editar.spec.ts",
+          "title": "US-12 c6 · Editar solo la descripción conserva el título y la prioridad",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 579,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us12-editar.spec.ts",
+          "title": "US-12 c5 · Un usuario ajeno al proyecto no puede editar la tarea (403)",
+          "status": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration_ms": 400,
+              "errors": [
+                "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: 403\nReceived: 200\n\n  90 |\n  91 |     // Assert: la spec US-12 c5 exige 403\n> 92 |     expect(res.status()).toBe(403);\n     |                          ^\n  93 |   });\n  94 | });\n  95 |\n    at <repo>/e2e/us12-editar.spec.ts:92:26"
+              ]
+            }
+          ]
+        },
+        {
+          "file": "e2e/us14-asignar.spec.ts",
+          "title": "US-14 c1/c5 · Asignar la tarea a un miembro la deja asignada sin cambiar el estado",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 792,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us14-asignar.spec.ts",
+          "title": "US-14 c1 · Asignar la tarea a alguien ajeno al proyecto devuelve 400",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 395,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us14-asignar.spec.ts",
+          "title": "US-14 c2/c5 · Reasignar por UI actualiza sólo la tarjeta elegida y persiste al recargar",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 1181,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us14-asignar.spec.ts",
+          "title": "US-14 c3 · Se puede desasignar la tarea dejando el asignado en nulo",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 809,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us14-asignar.spec.ts",
+          "title": "US-14 c4 · Un miembro que no es owner también puede asignar la tarea",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 560,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us15-etiquetas.spec.ts",
+          "title": "US-15 c1 · Al agregar la etiqueta \"Backend\" se guarda normalizada a minúsculas",
+          "status": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration_ms": 10566,
+              "errors": [
+                "Error: expect(locator).toHaveText(expected) failed\n\nLocator:  getByTestId('tag-chip-name')\nExpected: \"backend\"\nReceived: \"Backend\"\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveText\" getByTestId('tag-chip-name') with timeout 10000ms\n  - waiting for getByTestId('tag-chip-name')\n    24 × locator resolved to <span data-testid=\"tag-chip-name\">Backend</span>\n       - unexpected value \"Backend\"\n\n\n  27 |     expect(res.status()).toBe(201);\n  28 |     await expect(page.getByTestId('tag-chip')).toHaveCount(1);\n> 29 |     await expect(page.getByTestId('tag-chip-name')).toHaveText('backend');\n     |                                                     ^\n  30 |   });\n  31 |\n  32 |   test('US-15 c2 · Agregar \"Bug\" y luego \"BUG\" no crea dos etiquetas distintas', async ({\n    at <repo>/e2e/us15-etiquetas.spec.ts:29:53"
+              ]
+            }
+          ]
+        },
+        {
+          "file": "e2e/us15-etiquetas.spec.ts",
+          "title": "US-15 c2 · Agregar \"Bug\" y luego \"BUG\" no crea dos etiquetas distintas",
+          "status": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration_ms": 10719,
+              "errors": [
+                "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  getByTestId('tag-chip')\nExpected: 1\nReceived: 2\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveCount\" getByTestId('tag-chip') with timeout 10000ms\n  - waiting for getByTestId('tag-chip')\n    - locator resolved to 0 elements\n    - unexpected value \"0\"\n    23 × locator resolved to 2 elements\n       - unexpected value \"2\"\n\n\n  53 |\n  54 |     // Assert: sigue habiendo exactamente una etiqueta y se llama \"bug\"\n> 55 |     await expect(page.getByTestId('tag-chip')).toHaveCount(1);\n     |                                                ^\n  56 |     await expect(page.getByTestId('tag-chip-name')).toHaveText('bug');\n  57 |   });\n  58 |\n    at <repo>/e2e/us15-etiquetas.spec.ts:55:48"
+              ]
+            }
+          ]
+        },
+        {
+          "file": "e2e/us15-etiquetas.spec.ts",
+          "title": "US-15 c3 · Agregar la misma etiqueta dos veces devuelve 200 y no genera duplicados",
+          "status": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration_ms": 10701,
+              "errors": [
+                "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  getByTestId('tag-chip')\nExpected: 1\nReceived: 2\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveCount\" getByTestId('tag-chip') with timeout 10000ms\n  - waiting for getByTestId('tag-chip')\n    - locator resolved to 0 elements\n    - unexpected value \"0\"\n    23 × locator resolved to 2 elements\n       - unexpected value \"2\"\n\n\n  80 |\n  81 |     // Assert: no se duplica la etiqueta y la API responde 200\n> 82 |     await expect(page.getByTestId('tag-chip')).toHaveCount(1);\n     |                                                ^\n  83 |     expect(res.status()).toBe(200);\n  84 |   });\n  85 |\n    at <repo>/e2e/us15-etiquetas.spec.ts:82:48"
+              ]
+            }
+          ]
+        },
+        {
+          "file": "e2e/us15-etiquetas.spec.ts",
+          "title": "US-15 c4 · Una etiqueta de más de 30 caracteres devuelve 400 y no se agrega",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 601,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us15-etiquetas.spec.ts",
+          "title": "US-15 c5 · La tarea admite 10 etiquetas y la número 11 devuelve 400",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 1218,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us16-vencimiento.spec.ts",
+          "title": "US-16 c2/c3 · La fecha cargada se devuelve igual, sin corrimiento por zona horaria",
+          "status": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration_ms": 565,
+              "errors": [
+                "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"2026-09-15\"\nReceived: \"2026-09-14\"\n\n  32 |     expect(res.status()).toBe(200);\n  33 |     const body = (await res.json()) as { dueDate: string | null };\n> 34 |     expect(body.dueDate).toBe('2026-09-15');\n     |                          ^\n  35 |     await expect(page.getByTestId('task-duedate-value')).toHaveText('2026-09-15');\n  36 |   });\n  37 |\n    at <repo>/e2e/us16-vencimiento.spec.ts:34:26"
+              ]
+            }
+          ]
+        },
+        {
+          "file": "e2e/us16-vencimiento.spec.ts",
+          "title": "US-16 c7 · Se admite cargar una fecha de vencimiento pasada",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 590,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us16-vencimiento.spec.ts",
+          "title": "US-16 c5 · Se puede quitar la fecha de vencimiento enviándola vacía",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 676,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us16-vencimiento.spec.ts",
+          "title": "US-16 c6 · Una fecha con formato inválido devuelve 400",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 365,
+              "errors": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "isolated-reassign",
+      "started_at_utc": "2026-11-17T22:44:32.668130+00:00",
+      "exit_code": 0,
+      "base_commit": "61930c4bcd642817d7240243ba4a87dbccf6719d",
+      "file_sha256": {
+        "e2e/components/TaskCard.ts": "931b7af302a875eb4b69e12ee2a724e29108f9d107aaa5259493e635590f902f",
+        "e2e/data/test-data.ts": "20690c61e89f6b9897918c99cc375f964e2cc0f8b7e4220ecd716f0d27cd729b",
+        "e2e/fixtures.ts": "27d79c2ad4bcd8d0b80b340579576aac87a753725ff055bdc6d612cfbe32cfb8",
+        "e2e/helpers.ts": "a59f5d5438bb0b2207d39bb3a67d41cbf070da20652e0cc4c2d674df45c13e17",
+        "e2e/playwright/tests/a11y.spec.ts": "c65bc8b18654bbf18201429379d3baadbdfd6c1984b6109aabc6afd1d8e0a81c",
+        "e2e/support/start-api.cjs": "4b43573e5f0121b501b6d3035ce3c18e5125ef65504170e20e1674d223ce1f88",
+        "e2e/us12-editar.spec.ts": "478a55f4d339b3c4695dd137d2eb92309ce40fd05a06e86274f0ae97db1b7fe2",
+        "e2e/us14-asignar.spec.ts": "3da73552254d68cdb963832e4faf75e485b9639dda436108f2e9619a29e83258",
+        "e2e/us15-etiquetas.spec.ts": "ea4b15cc1956f849a54ac298ff01e8cc87fae4753349d17c1db873690a4c7da8",
+        "e2e/us16-vencimiento.spec.ts": "3a80c200f865772ea4a3a1d2a03ff21d3c70456ec453f824f4cbabc53645b1c9"
+      },
+      "ambient_database_unchanged": true,
+      "historical_evidence_unchanged": true,
+      "temporary_database_directories_left": 0,
+      "statistics": {
+        "startTime": "2026-11-17T22:44:33.034Z",
+        "duration": 4516.855,
+        "expected": 2,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "cases": [
+        {
+          "file": "e2e/us14-asignar.spec.ts",
+          "title": "US-14 c2/c5 · Reasignar por UI actualiza sólo la tarjeta elegida y persiste al recargar",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 1402,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us14-asignar.spec.ts",
+          "title": "US-14 c2/c5 · Reasignar por UI actualiza sólo la tarjeta elegida y persiste al recargar",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 1202,
+              "errors": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "isolated-outsider",
+      "started_at_utc": "2026-11-17T22:45:32.987239+00:00",
+      "exit_code": 0,
+      "base_commit": "61930c4bcd642817d7240243ba4a87dbccf6719d",
+      "file_sha256": {
+        "e2e/components/TaskCard.ts": "931b7af302a875eb4b69e12ee2a724e29108f9d107aaa5259493e635590f902f",
+        "e2e/data/test-data.ts": "20690c61e89f6b9897918c99cc375f964e2cc0f8b7e4220ecd716f0d27cd729b",
+        "e2e/fixtures.ts": "27d79c2ad4bcd8d0b80b340579576aac87a753725ff055bdc6d612cfbe32cfb8",
+        "e2e/helpers.ts": "a59f5d5438bb0b2207d39bb3a67d41cbf070da20652e0cc4c2d674df45c13e17",
+        "e2e/playwright/tests/a11y.spec.ts": "c65bc8b18654bbf18201429379d3baadbdfd6c1984b6109aabc6afd1d8e0a81c",
+        "e2e/support/start-api.cjs": "4b43573e5f0121b501b6d3035ce3c18e5125ef65504170e20e1674d223ce1f88",
+        "e2e/us12-editar.spec.ts": "478a55f4d339b3c4695dd137d2eb92309ce40fd05a06e86274f0ae97db1b7fe2",
+        "e2e/us14-asignar.spec.ts": "3da73552254d68cdb963832e4faf75e485b9639dda436108f2e9619a29e83258",
+        "e2e/us15-etiquetas.spec.ts": "ea4b15cc1956f849a54ac298ff01e8cc87fae4753349d17c1db873690a4c7da8",
+        "e2e/us16-vencimiento.spec.ts": "3a80c200f865772ea4a3a1d2a03ff21d3c70456ec453f824f4cbabc53645b1c9"
+      },
+      "ambient_database_unchanged": true,
+      "historical_evidence_unchanged": true,
+      "temporary_database_directories_left": 0,
+      "statistics": {
+        "startTime": "2026-11-17T22:45:33.214Z",
+        "duration": 2871.6059999999998,
+        "expected": 2,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "cases": [
+        {
+          "file": "e2e/us14-asignar.spec.ts",
+          "title": "US-14 c1 · Asignar la tarea a alguien ajeno al proyecto devuelve 400",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 594,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us14-asignar.spec.ts",
+          "title": "US-14 c1 · Asignar la tarea a alguien ajeno al proyecto devuelve 400",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 408,
+              "errors": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "integrated",
+      "started_at_utc": "2026-11-17T22:53:10.075749+00:00",
+      "exit_code": 1,
+      "base_commit": "d08590fa8a0eebb2400be62878321bce1491b96d",
+      "file_sha256": {
+        "e2e/components/TaskCard.ts": "931b7af302a875eb4b69e12ee2a724e29108f9d107aaa5259493e635590f902f",
+        "e2e/data/test-data.ts": "20690c61e89f6b9897918c99cc375f964e2cc0f8b7e4220ecd716f0d27cd729b",
+        "e2e/fixtures.ts": "27d79c2ad4bcd8d0b80b340579576aac87a753725ff055bdc6d612cfbe32cfb8",
+        "e2e/helpers.ts": "a59f5d5438bb0b2207d39bb3a67d41cbf070da20652e0cc4c2d674df45c13e17",
+        "e2e/playwright/tests/a11y.spec.ts": "c65bc8b18654bbf18201429379d3baadbdfd6c1984b6109aabc6afd1d8e0a81c",
+        "e2e/support/start-api.cjs": "4b43573e5f0121b501b6d3035ce3c18e5125ef65504170e20e1674d223ce1f88",
+        "e2e/us12-editar.spec.ts": "478a55f4d339b3c4695dd137d2eb92309ce40fd05a06e86274f0ae97db1b7fe2",
+        "e2e/us14-asignar.spec.ts": "3da73552254d68cdb963832e4faf75e485b9639dda436108f2e9619a29e83258",
+        "e2e/us15-etiquetas.spec.ts": "ea4b15cc1956f849a54ac298ff01e8cc87fae4753349d17c1db873690a4c7da8",
+        "e2e/us16-vencimiento.spec.ts": "3a80c200f865772ea4a3a1d2a03ff21d3c70456ec453f824f4cbabc53645b1c9"
+      },
+      "ambient_database_unchanged": true,
+      "historical_evidence_unchanged": true,
+      "temporary_database_directories_left": 0,
+      "statistics": {
+        "startTime": "2026-11-17T22:53:10.380Z",
+        "duration": 48031.504,
+        "expected": 17,
+        "skipped": 0,
+        "unexpected": 5,
+        "flaky": 0
+      },
+      "cases": [
+        {
+          "file": "e2e/playwright/tests/a11y.spec.ts",
+          "title": "a11y informe WCAG 2.1 A y AA en cinco vistas",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 1392,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/playwright/tests/a11y.spec.ts",
+          "title": "a11y verificación de la corrección label en detalle de tarea",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 436,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/playwright/tests/a11y.spec.ts",
+          "title": "a11y revisión complementaria de teclado idioma errores y CSS",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 499,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/playwright/tests/a11y.spec.ts",
+          "title": "seguridad XSS almacenado se representa como texto en tablero y detalle",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 415,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us12-editar.spec.ts",
+          "title": "US-12 c1 · Editar el título de una tarea lo actualiza",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 559,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us12-editar.spec.ts",
+          "title": "US-12 c2 · Un título de menos de 3 caracteres devuelve 400",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 544,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us12-editar.spec.ts",
+          "title": "US-12 c6 · Editar solo la descripción conserva el título y la prioridad",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 560,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us12-editar.spec.ts",
+          "title": "US-12 c5 · Un usuario ajeno al proyecto no puede editar la tarea (403)",
+          "status": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration_ms": 398,
+              "errors": [
+                "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: 403\nReceived: 200\n\n  90 |\n  91 |     // Assert: la spec US-12 c5 exige 403\n> 92 |     expect(res.status()).toBe(403);\n     |                          ^\n  93 |   });\n  94 | });\n  95 |\n    at <repo>/e2e/us12-editar.spec.ts:92:26"
+              ]
+            }
+          ]
+        },
+        {
+          "file": "e2e/us14-asignar.spec.ts",
+          "title": "US-14 c1/c5 · Asignar la tarea a un miembro la deja asignada sin cambiar el estado",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 793,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us14-asignar.spec.ts",
+          "title": "US-14 c1 · Asignar la tarea a alguien ajeno al proyecto devuelve 400",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 413,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us14-asignar.spec.ts",
+          "title": "US-14 c2/c5 · Reasignar por UI actualiza sólo la tarjeta elegida y persiste al recargar",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 1165,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us14-asignar.spec.ts",
+          "title": "US-14 c3 · Se puede desasignar la tarea dejando el asignado en nulo",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 833,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us14-asignar.spec.ts",
+          "title": "US-14 c4 · Un miembro que no es owner también puede asignar la tarea",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 808,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us15-etiquetas.spec.ts",
+          "title": "US-15 c1 · Al agregar la etiqueta \"Backend\" se guarda normalizada a minúsculas",
+          "status": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration_ms": 10611,
+              "errors": [
+                "Error: expect(locator).toHaveText(expected) failed\n\nLocator:  getByTestId('tag-chip-name')\nExpected: \"backend\"\nReceived: \"Backend\"\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveText\" getByTestId('tag-chip-name') with timeout 10000ms\n  - waiting for getByTestId('tag-chip-name')\n    24 × locator resolved to <span data-testid=\"tag-chip-name\">Backend</span>\n       - unexpected value \"Backend\"\n\n\n  27 |     expect(res.status()).toBe(201);\n  28 |     await expect(page.getByTestId('tag-chip')).toHaveCount(1);\n> 29 |     await expect(page.getByTestId('tag-chip-name')).toHaveText('backend');\n     |                                                     ^\n  30 |   });\n  31 |\n  32 |   test('US-15 c2 · Agregar \"Bug\" y luego \"BUG\" no crea dos etiquetas distintas', async ({\n    at <repo>/e2e/us15-etiquetas.spec.ts:29:53"
+              ]
+            }
+          ]
+        },
+        {
+          "file": "e2e/us15-etiquetas.spec.ts",
+          "title": "US-15 c2 · Agregar \"Bug\" y luego \"BUG\" no crea dos etiquetas distintas",
+          "status": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration_ms": 10694,
+              "errors": [
+                "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  getByTestId('tag-chip')\nExpected: 1\nReceived: 2\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveCount\" getByTestId('tag-chip') with timeout 10000ms\n  - waiting for getByTestId('tag-chip')\n    - locator resolved to 0 elements\n    - unexpected value \"0\"\n    23 × locator resolved to 2 elements\n       - unexpected value \"2\"\n\n\n  53 |\n  54 |     // Assert: sigue habiendo exactamente una etiqueta y se llama \"bug\"\n> 55 |     await expect(page.getByTestId('tag-chip')).toHaveCount(1);\n     |                                                ^\n  56 |     await expect(page.getByTestId('tag-chip-name')).toHaveText('bug');\n  57 |   });\n  58 |\n    at <repo>/e2e/us15-etiquetas.spec.ts:55:48"
+              ]
+            }
+          ]
+        },
+        {
+          "file": "e2e/us15-etiquetas.spec.ts",
+          "title": "US-15 c3 · Agregar la misma etiqueta dos veces devuelve 200 y no genera duplicados",
+          "status": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration_ms": 10698,
+              "errors": [
+                "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  getByTestId('tag-chip')\nExpected: 1\nReceived: 2\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveCount\" getByTestId('tag-chip') with timeout 10000ms\n  - waiting for getByTestId('tag-chip')\n    - locator resolved to 0 elements\n    - unexpected value \"0\"\n    23 × locator resolved to 2 elements\n       - unexpected value \"2\"\n\n\n  80 |\n  81 |     // Assert: no se duplica la etiqueta y la API responde 200\n> 82 |     await expect(page.getByTestId('tag-chip')).toHaveCount(1);\n     |                                                ^\n  83 |     expect(res.status()).toBe(200);\n  84 |   });\n  85 |\n    at <repo>/e2e/us15-etiquetas.spec.ts:82:48"
+              ]
+            }
+          ]
+        },
+        {
+          "file": "e2e/us15-etiquetas.spec.ts",
+          "title": "US-15 c4 · Una etiqueta de más de 30 caracteres devuelve 400 y no se agrega",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 588,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us15-etiquetas.spec.ts",
+          "title": "US-15 c5 · La tarea admite 10 etiquetas y la número 11 devuelve 400",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 1264,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us16-vencimiento.spec.ts",
+          "title": "US-16 c2/c3 · La fecha cargada se devuelve igual, sin corrimiento por zona horaria",
+          "status": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration_ms": 628,
+              "errors": [
+                "Error: expect(received).toBe(expected) // Object.is equality\n\nExpected: \"2026-09-15\"\nReceived: \"2026-09-14\"\n\n  32 |     expect(res.status()).toBe(200);\n  33 |     const body = (await res.json()) as { dueDate: string | null };\n> 34 |     expect(body.dueDate).toBe('2026-09-15');\n     |                          ^\n  35 |     await expect(page.getByTestId('task-duedate-value')).toHaveText('2026-09-15');\n  36 |   });\n  37 |\n    at <repo>/e2e/us16-vencimiento.spec.ts:34:26"
+              ]
+            }
+          ]
+        },
+        {
+          "file": "e2e/us16-vencimiento.spec.ts",
+          "title": "US-16 c7 · Se admite cargar una fecha de vencimiento pasada",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 586,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us16-vencimiento.spec.ts",
+          "title": "US-16 c5 · Se puede quitar la fecha de vencimiento enviándola vacía",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 638,
+              "errors": []
+            }
+          ]
+        },
+        {
+          "file": "e2e/us16-vencimiento.spec.ts",
+          "title": "US-16 c6 · Una fecha con formato inválido devuelve 400",
+          "status": "expected",
+          "results": [
+            {
+              "status": "passed",
+              "retry": 0,
+              "duration_ms": 401,
+              "errors": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "typecheck_exit": 0,
+    "launcher_syntax_exit": 0,
+    "build_client_exit": 0,
+    "port_guard": {
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "refused_existing_server": true,
+      "only_health_checks": true,
+      "requests": [
+        {
+          "method": "GET",
+          "path": "/api/health"
+        }
+      ]
+    }
+  },
+  "configuration_sha256": {
+    "playwright.config.ts": "a0de155a9b07ee85f968b3e4d04d69589ff880707489036a5cad9d284a9f6244",
+    "client/vite.config.ts": "cdfe36a8157f6840ebd46150e25012cf1beafd41a9dbe969221b3acec79881cd",
+    "package.json": "1d7758dd1d7612d62a6db7f0aa6431079d347201b1d5585bd89b6ea0538f3b4e",
+    "tsconfig.e2e.json": "b4524c4bac0fdfd8c62bf9baefb67f7dd7f3086fc3766e41fdfd4b4cdf3a0c34"
+  },
+  "integration": {
+    "main_commit": "d08590fa8a0eebb2400be62878321bce1491b96d",
+    "conflicts": false,
+    "e2e_results_unchanged": true,
+    "api": {
+      "total": 46,
+      "passed": 43,
+      "failed": 3,
+      "failed_cases": [
+        "Tareas POST /api/projects/:projectId/tasks crea las tareas siempre con estado inicial TODO aunque el cliente envie otro estado (US-05 c3) [BUG-08]",
+        "Tareas GET /api/projects/:projectId/tasks (filtros) aplica status y priority simultaneamente al filtrar tareas (US-07 c5) [BUG-07]",
+        "Proyectos POST /api/projects rechaza crear un proyecto con nombre demasiado corto (US-03 c1) [BUG-06]"
+      ]
+    }
+  }
+}
