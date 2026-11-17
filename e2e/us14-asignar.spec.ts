@@ -1,12 +1,10 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import { TaskCard } from './components/TaskCard';
 import {
   abrirTarea,
   agregarMiembroAlProyecto,
   auth,
   crearProyectoYTarea,
-  loginApi,
-  registrarUsuarioNuevo,
   tokenActual,
 } from './helpers';
 
@@ -19,18 +17,16 @@ import {
  */
 test.describe('US-14 · Asignar tarea a un miembro', () => {
   test('US-14 c1/c5 · Asignar la tarea a un miembro la deja asignada sin cambiar el estado', async ({
-    page,
+    authenticatedPage: page, member,
   }) => {
     // Arrange
-    await registrarUsuarioNuevo(page);
     const { taskId, taskTitle } = await crearProyectoYTarea(page, 'Tarea para asignar');
-    await agregarMiembroAlProyecto(page, 'bob@test.com');
-    const bob = await loginApi(page.request, 'bob@test.com');
+    await agregarMiembroAlProyecto(page, member.email);
     await abrirTarea(page, taskTitle, taskId);
 
     // Act
     const select = page.getByTestId('task-assignee-select');
-    await select.selectOption({ label: 'bob@test.com' });
+    await select.selectOption({ label: member.email });
     const respuesta = page.waitForResponse(
       (r) => r.url().endsWith(`/api/tasks/${taskId}`) && r.request().method() === 'PATCH',
     );
@@ -43,30 +39,27 @@ test.describe('US-14 · Asignar tarea a un miembro', () => {
       assigneeId: string | null;
       status: string;
     };
-    expect(body.assigneeId).toBe(bob.userId);
+    expect(body.assigneeId).toBe(member.userId);
     expect(body.status).toBe('TODO');
-    await expect(select).toHaveValue(bob.userId);
+    await expect(select).toHaveValue(member.userId);
   });
 
-  test('US-14 c1 · Asignar la tarea a alguien ajeno al proyecto devuelve 400', async ({ page }) => {
-    // Arrange: caro@test.com NO es miembro del proyecto recién creado
-    await registrarUsuarioNuevo(page);
+  test('US-14 c1 · Asignar la tarea a alguien ajeno al proyecto devuelve 400', async ({ authenticatedPage: page, outsider }) => {
+    // Arrange: la cuenta ajena no pertenece al proyecto recién creado
     const { taskId } = await crearProyectoYTarea(page, 'Tarea con asignado ajeno');
     const token = await tokenActual(page);
-    const caro = await loginApi(page.request, 'caro@test.com');
 
     // Act
     const res = await page.request.patch(`/api/tasks/${taskId}`, {
       headers: auth(token),
-      data: { assigneeId: caro.userId },
+      data: { assigneeId: outsider.userId },
     });
 
     // Assert
     expect(res.status()).toBe(400);
   });
 
-  test('US-14 c2/c5 · Reasignar por UI actualiza sólo la tarjeta elegida y persiste al recargar', async ({ page }) => {
-    await registrarUsuarioNuevo(page);
+  test('US-14 c2/c5 · Reasignar por UI actualiza sólo la tarjeta elegida y persiste al recargar', async ({ authenticatedPage: page, member, secondMember }) => {
     const title = 'Tarea con título repetido';
     const { taskId, taskTitle } = await crearProyectoYTarea(page, title);
 
@@ -83,15 +76,15 @@ test.describe('US-14 · Asignar tarea a un miembro', () => {
     const untouchedCard = new TaskCard(page, secondTask.id);
     await expect(untouchedCard.title).toHaveText(title);
 
-    await agregarMiembroAlProyecto(page, 'bob@test.com');
-    await agregarMiembroAlProyecto(page, 'caro@test.com');
+    await agregarMiembroAlProyecto(page, member.email);
+    await agregarMiembroAlProyecto(page, secondMember.email);
     await abrirTarea(page, taskTitle, taskId);
     const assignee = page.getByTestId('task-assignee-select');
     const save = page.getByTestId('task-save-button');
 
-    // La tarea queda asignada a Bob antes de reasignarla a Caro. Ambas
+    // La tarea queda asignada al primer miembro antes de reasignarla al segundo. Ambas
     // operaciones se realizan mediante el formulario real.
-    await assignee.selectOption({ label: 'bob@test.com' });
+    await assignee.selectOption({ label: member.email });
     const assigned = page.waitForResponse(
       (r) => r.url().endsWith(`/api/tasks/${taskId}`) && r.request().method() === 'PATCH',
     );
@@ -99,8 +92,8 @@ test.describe('US-14 · Asignar tarea a un miembro', () => {
     expect((await assigned).status()).toBe(200);
     await expect(save).toBeEnabled();
 
-    await assignee.selectOption({ label: 'caro@test.com' });
-    const caroId = await assignee.inputValue();
+    await assignee.selectOption({ label: secondMember.email });
+    const secondMemberId = await assignee.inputValue();
     const reassigned = page.waitForResponse(
       (r) => r.url().endsWith(`/api/tasks/${taskId}`) && r.request().method() === 'PATCH',
     );
@@ -108,7 +101,7 @@ test.describe('US-14 · Asignar tarea a un miembro', () => {
     const response = await reassigned;
     expect(response.status()).toBe(200);
     const updated = (await response.json()) as { assigneeId: string; status: string };
-    expect(updated.assigneeId).toBe(caroId);
+    expect(updated.assigneeId).toBe(secondMemberId);
     expect(updated.status).toBe('TODO');
     await expect(save).toBeEnabled();
 
@@ -118,21 +111,20 @@ test.describe('US-14 · Asignar tarea a un miembro', () => {
     await expect(page.getByTestId('board-page')).toBeVisible();
 
     const reassignedCard = new TaskCard(page, taskId);
-    await expect(reassignedCard.assignee).toHaveText('caro@test.com');
+    await expect(reassignedCard.assignee).toHaveText(secondMember.email);
     await expect(reassignedCard.status).toHaveValue('TODO');
     await expect(untouchedCard.assignee).toHaveText('Sin asignar');
     await expect(untouchedCard.status).toHaveValue('TODO');
   });
 
-  test('US-14 c3 · Se puede desasignar la tarea dejando el asignado en nulo', async ({ page }) => {
+  test('US-14 c3 · Se puede desasignar la tarea dejando el asignado en nulo', async ({ authenticatedPage: page, member }) => {
     // Arrange
-    await registrarUsuarioNuevo(page);
     const { taskId, taskTitle } = await crearProyectoYTarea(page, 'Tarea para desasignar');
-    await agregarMiembroAlProyecto(page, 'bob@test.com');
+    await agregarMiembroAlProyecto(page, member.email);
     await abrirTarea(page, taskTitle, taskId);
 
     const select = page.getByTestId('task-assignee-select');
-    await select.selectOption({ label: 'bob@test.com' });
+    await select.selectOption({ label: member.email });
     const asignar = page.waitForResponse(
       (r) => r.url().endsWith(`/api/tasks/${taskId}`) && r.request().method() === 'PATCH',
     );
@@ -154,22 +146,20 @@ test.describe('US-14 · Asignar tarea a un miembro', () => {
     await expect(select).toHaveValue('');
   });
 
-  test('US-14 c4 · Un miembro que no es owner también puede asignar la tarea', async ({ page }) => {
-    // Arrange: bob es miembro (no owner) del proyecto
-    await registrarUsuarioNuevo(page);
+  test('US-14 c4 · Un miembro que no es owner también puede asignar la tarea', async ({ authenticatedPage: page, member }) => {
+    // Arrange: la cuenta de la fixture es miembro (no owner) del proyecto
     const { taskId } = await crearProyectoYTarea(page, 'Tarea asignable por miembro');
-    await agregarMiembroAlProyecto(page, 'bob@test.com');
-    const bob = await loginApi(page.request, 'bob@test.com');
+    await agregarMiembroAlProyecto(page, member.email);
 
-    // Act: bob se asigna la tarea a sí mismo
+    // Act: el miembro se asigna la tarea a sí mismo
     const res = await page.request.patch(`/api/tasks/${taskId}`, {
-      headers: auth(bob.token),
-      data: { assigneeId: bob.userId },
+      headers: auth(member.token),
+      data: { assigneeId: member.userId },
     });
 
     // Assert
     expect(res.status()).toBe(200);
     const body = (await res.json()) as { assigneeId: string | null };
-    expect(body.assigneeId).toBe(bob.userId);
+    expect(body.assigneeId).toBe(member.userId);
   });
 });

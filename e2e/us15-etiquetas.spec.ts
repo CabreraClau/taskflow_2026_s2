@@ -1,5 +1,5 @@
-import { expect, test } from '@playwright/test';
-import { abrirTarea, crearProyectoYTarea, registrarUsuarioNuevo } from './helpers';
+import { expect, test } from './fixtures';
+import { abrirTarea, crearProyectoYTarea } from './helpers';
 
 /**
  * US-15 · Etiquetar tareas
@@ -9,10 +9,9 @@ import { abrirTarea, crearProyectoYTarea, registrarUsuarioNuevo } from './helper
  */
 test.describe('US-15 · Etiquetar tareas', () => {
   test('US-15 c1 · Al agregar la etiqueta "Backend" se guarda normalizada a minúsculas', async ({
-    page,
+    authenticatedPage: page,
   }) => {
     // Arrange
-    await registrarUsuarioNuevo(page);
     const { taskId, taskTitle } = await crearProyectoYTarea(page, 'Tarea para etiquetar');
     await abrirTarea(page, taskTitle, taskId);
 
@@ -31,10 +30,9 @@ test.describe('US-15 · Etiquetar tareas', () => {
   });
 
   test('US-15 c2 · Agregar "Bug" y luego "BUG" no crea dos etiquetas distintas', async ({
-    page,
+    authenticatedPage: page,
   }) => {
     // Arrange
-    await registrarUsuarioNuevo(page);
     const { taskId, taskTitle } = await crearProyectoYTarea(page, 'Tarea con etiquetas');
     await abrirTarea(page, taskTitle, taskId);
 
@@ -59,10 +57,9 @@ test.describe('US-15 · Etiquetar tareas', () => {
   });
 
   test('US-15 c3 · Agregar la misma etiqueta dos veces devuelve 200 y no genera duplicados', async ({
-    page,
+    authenticatedPage: page,
   }) => {
     // Arrange
-    await registrarUsuarioNuevo(page);
     const { taskId, taskTitle } = await crearProyectoYTarea(page, 'Tarea con duplicados');
     await abrirTarea(page, taskTitle, taskId);
 
@@ -87,10 +84,9 @@ test.describe('US-15 · Etiquetar tareas', () => {
   });
 
   test('US-15 c4 · Una etiqueta de más de 30 caracteres devuelve 400 y no se agrega', async ({
-    page,
+    authenticatedPage: page,
   }) => {
     // Arrange
-    await registrarUsuarioNuevo(page);
     const { taskId, taskTitle } = await crearProyectoYTarea(page, 'Tarea con etiqueta larga');
     await abrirTarea(page, taskTitle, taskId);
 
@@ -110,9 +106,8 @@ test.describe('US-15 · Etiquetar tareas', () => {
     await expect(page.getByTestId('tag-chip')).toHaveCount(0);
   });
 
-  test('US-15 c5 · La tarea admite 10 etiquetas y la número 11 devuelve 400', async ({ page }) => {
+  test('US-15 c5 · La tarea admite 10 etiquetas y la número 11 devuelve 400', async ({ authenticatedPage: page }) => {
     // Arrange
-    await registrarUsuarioNuevo(page);
     const { taskId, taskTitle } = await crearProyectoYTarea(page, 'Tarea con 10 etiquetas');
     await abrirTarea(page, taskTitle, taskId);
 

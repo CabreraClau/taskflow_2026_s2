@@ -1,9 +1,8 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './fixtures';
 import {
   abrirTarea,
   auth,
   crearProyectoYTarea,
-  registrarUsuarioNuevo,
   tokenActual,
 } from './helpers';
 
@@ -15,10 +14,9 @@ import {
  */
 test.describe('US-16 · Fecha de vencimiento', () => {
   test('US-16 c2/c3 · La fecha cargada se devuelve igual, sin corrimiento por zona horaria', async ({
-    page,
+    authenticatedPage: page,
   }) => {
     // Arrange
-    await registrarUsuarioNuevo(page);
     const { taskId, taskTitle } = await crearProyectoYTarea(page, 'Tarea con vencimiento');
     await abrirTarea(page, taskTitle, taskId);
 
@@ -37,9 +35,8 @@ test.describe('US-16 · Fecha de vencimiento', () => {
     await expect(page.getByTestId('task-duedate-value')).toHaveText('2026-09-15');
   });
 
-  test('US-16 c7 · Se admite cargar una fecha de vencimiento pasada', async ({ page }) => {
+  test('US-16 c7 · Se admite cargar una fecha de vencimiento pasada', async ({ authenticatedPage: page }) => {
     // Arrange
-    await registrarUsuarioNuevo(page);
     const { taskId, taskTitle } = await crearProyectoYTarea(page, 'Tarea con fecha pasada');
     await abrirTarea(page, taskTitle, taskId);
 
@@ -57,9 +54,8 @@ test.describe('US-16 · Fecha de vencimiento', () => {
     expect(body.dueDate).not.toBeNull();
   });
 
-  test('US-16 c5 · Se puede quitar la fecha de vencimiento enviándola vacía', async ({ page }) => {
+  test('US-16 c5 · Se puede quitar la fecha de vencimiento enviándola vacía', async ({ authenticatedPage: page }) => {
     // Arrange
-    await registrarUsuarioNuevo(page);
     const { taskId, taskTitle } = await crearProyectoYTarea(page, 'Tarea con fecha removible');
     await abrirTarea(page, taskTitle, taskId);
 
@@ -86,11 +82,10 @@ test.describe('US-16 · Fecha de vencimiento', () => {
     await expect(page.getByTestId('task-duedate-value')).toHaveText('—');
   });
 
-  test('US-16 c6 · Una fecha con formato inválido devuelve 400', async ({ page }) => {
+  test('US-16 c6 · Una fecha con formato inválido devuelve 400', async ({ authenticatedPage: page }) => {
     // Arrange: la UI usa un <input type="date">, que no deja escribir un
     // formato inválido; por eso se ataca la API directamente, que es donde la
     // spec exige la validación.
-    await registrarUsuarioNuevo(page);
     const { taskId } = await crearProyectoYTarea(page, 'Tarea con fecha inválida');
     const token = await tokenActual(page);
 
