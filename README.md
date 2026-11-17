@@ -80,6 +80,27 @@ El comando `db:setup` carga datos de ejemplo. Los tres usuarios comparten la con
 | `npm run db:reset` | Borra la base y la vuelve a crear desde cero |
 | `npm test` | Corre la suite de tests |
 | `npm run test:coverage` | Corre la suite con reporte de cobertura |
+| `npm run test:e2e` | Corre Playwright con una base temporal y datos propios, sin seed |
+
+### Pruebas de navegador
+
+Después de instalar las dependencias con `npm ci`, ejecutar
+`npx prisma generate` desde `server/` y `npx playwright install chromium`
+desde la raíz, una vez. Para la suite, desde la raíz usar:
+
+```sh
+npm run test:e2e -- --project=chromium
+```
+
+Playwright levanta una API exclusiva en `127.0.0.1:3100` y Vite en
+`127.0.0.1:5174`. Aplica las migraciones a una SQLite temporal, crea las cuentas
+que necesita cada caso y elimina esa base al terminar. No requiere `db:setup`
+ni `db:reset`; no reutiliza servidores de desarrollo. Los dos puertos deben
+estar libres. Los reportes y adjuntos quedan en `.audit/playwright/`.
+
+La suite conserva cinco fallos funcionales conocidos (BUG-01 a BUG-05).
+La arquitectura, el aislamiento y la comparación antes/después están en el
+[ADR de Playwright](docs/adr/ADR_0002-framework-playwright.md).
 
 ## Frontend
 
