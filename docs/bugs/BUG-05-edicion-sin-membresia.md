@@ -23,3 +23,31 @@ BUG-05 - Un usuario ajeno al proyecto puede editar la tarea (no devuelve 403)
 - Qué obtuvo realmente: la API respondió `200` y aplicó el cambio de título.
 
 - Severidad: ALTA.
+
+- Entorno:
+  - Código: commit `f368466` (03/11/2026), donde se generaron las capturas;
+    la causa raíz citada arriba sigue presente en `eac188c` (17/11/2026).
+  - Navegador: Chromium de Playwright 1.65.0 (`Desktop Chrome`), un worker,
+    `retries: 1` en local.
+  - Zona horaria: `America/Montevideo` (UTC−3) en el navegador
+    (`timezoneId`) y en el servidor (`TZ`), según `playwright.config.ts`.
+  - Servidores: API en `http://localhost:3000` y cliente Vite en
+    `http://localhost:5173`, sobre una base SQLite sembrada con `npm run db:reset`.
+  - Sistema: Windows (máquina local del equipo).
+
+- Reproducibilidad: siempre (2 de 2 intentos: la corrida y el reintento
+  automático de Playwright fallaron con el mismo resultado). Para
+  reproducirlo en un comando, con la base recién sembrada:
+
+  ```sh
+  npx playwright test e2e/us12-editar.spec.ts -g "US-12 c5" --project=chromium
+  ```
+
+- Evidencia:
+  - Test automatizado que falla: `e2e/us12-editar.spec.ts`, caso "US-12 c5".
+  - Error registrado por Playwright: `Expected: 403 / Received: 200`, en
+    [`error-context.md`](../../test-results/us12-editar-US-12-·-Editar-d4b6b--puede-editar-la-tarea-403--chromium/error-context.md).
+  - Captura de pantalla del fallo:
+    [`test-failed-1.png`](../../test-results/us12-editar-US-12-·-Editar-d4b6b--puede-editar-la-tarea-403--chromium/test-failed-1.png).
+  - Traza del reintento (abrir con `npx playwright show-trace`):
+    [`trace.zip`](../../test-results/us12-editar-US-12-·-Editar-d4b6b--puede-editar-la-tarea-403--chromium-retry1/trace.zip).
