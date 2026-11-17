@@ -1,0 +1,364 @@
+{
+  "environment": {
+    "os": "macOS 26.6",
+    "architecture": "arm64",
+    "node": "24.22.1",
+    "npm": "10.9.3",
+    "jest": "29.7.0",
+    "prisma": "6.19.3",
+    "timezone": "America/Montevideo",
+    "database": "SQLite temporal por archivo de prueba; server/tests/.tmp"
+  },
+  "commits": {
+    "base": "eac188c2bd05b347aa20d30388616c00a98d606f",
+    "characterization": "d7e9664790673f61c3a272e841e7f62bdf3f1752",
+    "refactor": "a577383ae8e94889d75d3e0c11f783f6819c165e"
+  },
+  "comparison": {
+    "production_unchanged_before_refactor": true,
+    "identical_characterization_before_after": true,
+    "identical_case_results_before_after": true,
+    "identical_branch_coverage_before_after": true
+  },
+  "stages": [
+    {
+      "label": "baseline-original",
+      "started_at_utc": "2026-11-17T21:56:26.149936+00:00",
+      "exit_code": 1,
+      "head": "eac188c2bd05b347aa20d30388616c00a98d606f",
+      "auth_service_sha256": "f28204b7745ddd7619aaa6fd4b7d015066a613e4c23944cd080e224927b00980",
+      "characterization_sha256": null,
+      "tests": {
+        "total": 21,
+        "passed": 18,
+        "failed": 3,
+        "skipped": 0,
+        "failed_cases": [
+          {
+            "file": "server/tests/tasks.test.ts",
+            "name": "Tareas aplica status y priority simultaneamente al filtrar tareas",
+            "status": "failed"
+          },
+          {
+            "file": "server/tests/tasks.test.ts",
+            "name": "Tareas crea las tareas siempre con estado inicial TODO aunque el cliente envie otro estado",
+            "status": "failed"
+          },
+          {
+            "file": "server/tests/projects.test.ts",
+            "name": "Proyectos rechaza crear un proyecto con nombre demasiado corto",
+            "status": "failed"
+          }
+        ],
+        "characterization_cases": []
+      },
+      "coverage": {
+        "lines": {
+          "total": 631,
+          "covered": 539,
+          "skipped": 0,
+          "pct": 85.41
+        },
+        "statements": {
+          "total": 699,
+          "covered": 558,
+          "skipped": 0,
+          "pct": 79.82
+        },
+        "functions": {
+          "total": 78,
+          "covered": 69,
+          "skipped": 0,
+          "pct": 88.46
+        },
+        "branches": {
+          "total": 239,
+          "covered": 120,
+          "skipped": 0,
+          "pct": 50.2
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "auth_coverage": {
+        "lines": {
+          "total": 54,
+          "covered": 37,
+          "skipped": 0,
+          "pct": 68.51
+        },
+        "functions": {
+          "total": 6,
+          "covered": 4,
+          "skipped": 0,
+          "pct": 66.66
+        },
+        "statements": {
+          "total": 58,
+          "covered": 37,
+          "skipped": 0,
+          "pct": 63.79
+        },
+        "branches": {
+          "total": 21,
+          "covered": 7,
+          "skipped": 0,
+          "pct": 33.33
+        }
+      }
+    },
+    {
+      "label": "before-refactor",
+      "started_at_utc": "2026-11-17T21:57:50.362695+00:00",
+      "exit_code": 1,
+      "head": "eac188c2bd05b347aa20d30388616c00a98d606f",
+      "auth_service_sha256": "f28204b7745ddd7619aaa6fd4b7d015066a613e4c23944cd080e224927b00980",
+      "characterization_sha256": "ad45ddc1b38806b3ac0b8bcc3c43ea29bf843f42d25bdb973122265e5595bf6b",
+      "tests": {
+        "total": 25,
+        "passed": 22,
+        "failed": 3,
+        "skipped": 0,
+        "failed_cases": [
+          {
+            "file": "server/tests/tasks.test.ts",
+            "name": "Tareas aplica status y priority simultaneamente al filtrar tareas",
+            "status": "failed"
+          },
+          {
+            "file": "server/tests/tasks.test.ts",
+            "name": "Tareas crea las tareas siempre con estado inicial TODO aunque el cliente envie otro estado",
+            "status": "failed"
+          },
+          {
+            "file": "server/tests/projects.test.ts",
+            "name": "Proyectos rechaza crear un proyecto con nombre demasiado corto",
+            "status": "failed"
+          }
+        ],
+        "characterization_cases": [
+          {
+            "file": "server/tests/auth-policy.characterization.test.ts",
+            "name": "Caracterización de la política de autenticación registra contraseñas con un hash bcrypt de costo 10",
+            "status": "passed"
+          },
+          {
+            "file": "server/tests/auth-policy.characterization.test.ts",
+            "name": "Caracterización de la política de autenticación bloquea al quinto fallo durante quince minutos y permite entrar al vencer",
+            "status": "passed"
+          },
+          {
+            "file": "server/tests/auth-policy.characterization.test.ts",
+            "name": "Caracterización de la política de autenticación genera un token de 24 bytes y almacena una vigencia de una hora",
+            "status": "passed"
+          },
+          {
+            "file": "server/tests/auth-policy.characterization.test.ts",
+            "name": "Caracterización de la política de autenticación restablece la contraseña conservando el costo 10 de bcrypt",
+            "status": "passed"
+          }
+        ]
+      },
+      "coverage": {
+        "lines": {
+          "total": 631,
+          "covered": 555,
+          "skipped": 0,
+          "pct": 87.95
+        },
+        "statements": {
+          "total": 699,
+          "covered": 574,
+          "skipped": 0,
+          "pct": 82.11
+        },
+        "functions": {
+          "total": 78,
+          "covered": 71,
+          "skipped": 0,
+          "pct": 91.02
+        },
+        "branches": {
+          "total": 239,
+          "covered": 125,
+          "skipped": 0,
+          "pct": 52.3
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "auth_coverage": {
+        "lines": {
+          "total": 54,
+          "covered": 53,
+          "skipped": 0,
+          "pct": 98.14
+        },
+        "functions": {
+          "total": 6,
+          "covered": 6,
+          "skipped": 0,
+          "pct": 100
+        },
+        "statements": {
+          "total": 58,
+          "covered": 53,
+          "skipped": 0,
+          "pct": 91.37
+        },
+        "branches": {
+          "total": 21,
+          "covered": 12,
+          "skipped": 0,
+          "pct": 57.14
+        }
+      }
+    },
+    {
+      "label": "after-refactor",
+      "started_at_utc": "2026-11-17T21:58:41.814385+00:00",
+      "exit_code": 1,
+      "head": "d7e9664790673f61c3a272e841e7f62bdf3f1752",
+      "auth_service_sha256": "53c3097c1ab10caa3a37ad6a008bf80ffe65309deb723a0ceb82a170ffc45d04",
+      "characterization_sha256": "ad45ddc1b38806b3ac0b8bcc3c43ea29bf843f42d25bdb973122265e5595bf6b",
+      "tests": {
+        "total": 25,
+        "passed": 22,
+        "failed": 3,
+        "skipped": 0,
+        "failed_cases": [
+          {
+            "file": "server/tests/tasks.test.ts",
+            "name": "Tareas aplica status y priority simultaneamente al filtrar tareas",
+            "status": "failed"
+          },
+          {
+            "file": "server/tests/tasks.test.ts",
+            "name": "Tareas crea las tareas siempre con estado inicial TODO aunque el cliente envie otro estado",
+            "status": "failed"
+          },
+          {
+            "file": "server/tests/projects.test.ts",
+            "name": "Proyectos rechaza crear un proyecto con nombre demasiado corto",
+            "status": "failed"
+          }
+        ],
+        "characterization_cases": [
+          {
+            "file": "server/tests/auth-policy.characterization.test.ts",
+            "name": "Caracterización de la política de autenticación registra contraseñas con un hash bcrypt de costo 10",
+            "status": "passed"
+          },
+          {
+            "file": "server/tests/auth-policy.characterization.test.ts",
+            "name": "Caracterización de la política de autenticación bloquea al quinto fallo durante quince minutos y permite entrar al vencer",
+            "status": "passed"
+          },
+          {
+            "file": "server/tests/auth-policy.characterization.test.ts",
+            "name": "Caracterización de la política de autenticación genera un token de 24 bytes y almacena una vigencia de una hora",
+            "status": "passed"
+          },
+          {
+            "file": "server/tests/auth-policy.characterization.test.ts",
+            "name": "Caracterización de la política de autenticación restablece la contraseña conservando el costo 10 de bcrypt",
+            "status": "passed"
+          }
+        ]
+      },
+      "coverage": {
+        "lines": {
+          "total": 636,
+          "covered": 560,
+          "skipped": 0,
+          "pct": 88.05
+        },
+        "statements": {
+          "total": 704,
+          "covered": 579,
+          "skipped": 0,
+          "pct": 82.24
+        },
+        "functions": {
+          "total": 78,
+          "covered": 71,
+          "skipped": 0,
+          "pct": 91.02
+        },
+        "branches": {
+          "total": 239,
+          "covered": 125,
+          "skipped": 0,
+          "pct": 52.3
+        },
+        "branchesTrue": {
+          "total": 0,
+          "covered": 0,
+          "skipped": 0,
+          "pct": 100
+        }
+      },
+      "auth_coverage": {
+        "lines": {
+          "total": 59,
+          "covered": 58,
+          "skipped": 0,
+          "pct": 98.3
+        },
+        "functions": {
+          "total": 6,
+          "covered": 6,
+          "skipped": 0,
+          "pct": 100
+        },
+        "statements": {
+          "total": 63,
+          "covered": 58,
+          "skipped": 0,
+          "pct": 92.06
+        },
+        "branches": {
+          "total": 21,
+          "covered": 12,
+          "skipped": 0,
+          "pct": 57.14
+        }
+      }
+    }
+  ],
+  "checks": {
+    "build": {
+      "label": "build",
+      "started_at_utc": "2026-11-17T21:58:51.370591+00:00",
+      "exit_code": 0,
+      "head": "d7e9664790673f61c3a272e841e7f62bdf3f1752",
+      "auth_service_sha256": "53c3097c1ab10caa3a37ad6a008bf80ffe65309deb723a0ceb82a170ffc45d04",
+      "characterization_sha256": "ad45ddc1b38806b3ac0b8bcc3c43ea29bf843f42d25bdb973122265e5595bf6b"
+    },
+    "lint": {
+      "label": "lint",
+      "started_at_utc": "2026-11-17T21:58:51.370591+00:00",
+      "exit_code": 0,
+      "head": "d7e9664790673f61c3a272e841e7f62bdf3f1752",
+      "auth_service_sha256": "53c3097c1ab10caa3a37ad6a008bf80ffe65309deb723a0ceb82a170ffc45d04",
+      "characterization_sha256": "ad45ddc1b38806b3ac0b8bcc3c43ea29bf843f42d25bdb973122265e5595bf6b"
+    }
+  },
+  "publication": {
+    "branch": "feedback-refactor-auth",
+    "characterization": "f1198dfefd16ddf9742fc2ffcd858dce7664135a",
+    "refactor": "7c636623e0f9f4b3e4069a474fb30d6687d1fa9d",
+    "characterization_tree": "e49913e50f18383b6dfe2c084b100cca21242995",
+    "refactor_tree": "2de6be5ab1948ac268c15bf21fa862c03b077698",
+    "matches_tested_local_trees": true,
+    "method": "Editor de GitHub; hashes locales conservados en commits y en los registros de ejecución."
+  }
+}
