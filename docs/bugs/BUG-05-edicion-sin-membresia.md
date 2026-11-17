@@ -27,13 +27,13 @@ BUG-05 - Un usuario ajeno al proyecto puede editar la tarea (no devuelve 403)
 - Entorno:
   - Código: commit `f368466` (03/11/2026), donde se generaron las capturas;
     la causa raíz citada arriba sigue presente en `eac188c` (17/11/2026).
-  - Navegador: Chromium de Playwright 1.65.0 (`Desktop Chrome`), un worker,
+  - Navegador: Chromium 156.0.8078.4 con Playwright 1.64.0 (`Desktop Chrome`), un worker,
     `retries: 1` en local.
   - Zona horaria: `America/Montevideo` (UTC−3) en el navegador
     (`timezoneId`) y en el servidor (`TZ`), según `playwright.config.ts`.
   - Servidores: API en `http://localhost:3000` y cliente Vite en
     `http://localhost:5173`, sobre una base SQLite sembrada con `npm run db:reset`.
-  - Sistema: Windows (máquina local del equipo).
+  - Sistema: Windows (`win32`, según la traza de Playwright).
 
 - Reproducibilidad: siempre (2 de 2 intentos: la corrida y el reintento
   automático de Playwright fallaron con el mismo resultado). Para
