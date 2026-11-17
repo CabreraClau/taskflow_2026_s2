@@ -1,0 +1,7 @@
+Check: lint
+UTC start: 2026-11-17T21:58:51.370591+00:00
+Working directory: <repo>/server
+Command: node node_modules/eslint/bin/eslint.js src
+Node: v24.22.1
+Timezone: America/Montevideo
+Exit code: 0
