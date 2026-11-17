@@ -1,0 +1,155 @@
+Corrida: 17/11/2026 19:24 (UTC-3) · Windows · API local (npm run dev) · rama clase1711 sobre eac188c
+Comando: npx newman run docs/postman/TaskFlow-clase5.postman_collection.json -e docs/postman/TaskFlow-local.postman_environment.json -r cli,json --reporter-json-export docs/evidence/clase5/newman-run.json
+
+newman
+
+TaskFlow · Clase 5 · Testing de APIs
+
+□ 0 · Setup
+└ Registrar usuario A (owner)
+  POST http://localhost:3000/api/auth/register [201 Created, 603B, 223ms]
+  √  201 con token y usuario
+
+└ Registrar usuario B (miembro)
+  POST http://localhost:3000/api/auth/register [201 Created, 603B, 168ms]
+  √  201
+
+└ Crear proyecto
+  POST http://localhost:3000/api/projects [201 Created, 421B, 97ms]
+  √  201 con id proj-N
+
+└ Agregar B como miembro
+  POST http://localhost:3000/api/projects/proj-404/members [201 Created, 374B, 64ms]
+  √  201
+
+└ Listar proyectos sin token → 401
+  GET http://localhost:3000/api/projects [401 Unauthorized, 359B, 24ms]
+  √  401 UNAUTHORIZED
+
+□ H-01 · Nombre de proyecto inválido (BUG-06)
+└ POST /projects con nombre "a" → espera 400
+  POST http://localhost:3000/api/projects [201 Created, 395B, 88ms]
+  1. 400 VALIDATION_ERROR (falla hoy: BUG-06)
+
+└ POST /projects con nombre "ab" (2 caracteres) → espera 400
+  POST http://localhost:3000/api/projects [201 Created, 396B, 74ms]
+  2. 400 VALIDATION_ERROR (falla hoy: BUG-06)
+
+└ POST /projects con nombre vacío → espera 400
+  POST http://localhost:3000/api/projects [201 Created, 394B, 56ms]
+  3. 400 VALIDATION_ERROR (falla hoy: BUG-06)
+
+└ POST /projects con nombre solo espacios → espera 400
+  POST http://localhost:3000/api/projects [409 Conflict, 369B, 27ms]
+  4. 400 VALIDATION_ERROR (falla hoy: BUG-06)
+
+└ POST /projects con nombre de 3 caracteres → 201 (límite válido)
+  POST http://localhost:3000/api/projects [201 Created, 397B, 67ms]
+  √  201
+
+□ H-02 · Filtros combinados (BUG-07)
+└ Crear tarea TODO/HIGH asignada a A
+  POST http://localhost:3000/api/projects/proj-404/tasks [201 Created, 509B, 90ms]
+  √  201
+
+└ Crear tarea TODO/LOW asignada a B
+  POST http://localhost:3000/api/projects/proj-404/tasks [201 Created, 508B, 26ms]
+  √  201
+
+└ Crear tarea HIGH asignada a B
+  POST http://localhost:3000/api/projects/proj-404/tasks [201 Created, 516B, 77ms]
+  √  201
+
+└ Pasar la tercera tarea a IN_PROGRESS
+  PATCH http://localhost:3000/api/tasks/task-10015 [200 OK, 518B, 60ms]
+  √  200 IN_PROGRESS
+
+└ GET status=TODO&priority=HIGH → solo TODO/HIGH
+  GET http://localhost:3000/api/projects/proj-404/tasks?status=TODO&priority=HIGH [200 OK, 974B, 49ms]
+  5. devuelve solo la tarea TODO/HIGH (falla hoy: BUG-07)
+
+└ GET status=TODO&priority=LOW&assignedTo=A → vacío
+  GET http://localhost:3000/api/projects/proj-404/tasks?status=TODO&priority=LOW&assignedTo=user-4 [200 OK, 636B, 36ms]
+  6. devuelve un arreglo vacío (falla hoy: BUG-07)
+
+□ H-03 · Estado inicial de la tarea (BUG-08)
+└ POST tarea con status DONE → se crea en TODO
+  POST http://localhost:3000/api/projects/proj-404/tasks [201 Created, 503B, 61ms]
+  7. 201 con status TODO (falla hoy: BUG-08)
+
+┌─────────────────────────┬───────────────────┬───────────────────┐
+│                         │          executed │            failed │
+├─────────────────────────┼───────────────────┼───────────────────┤
+│              iterations │                 1 │                 0 │
+├─────────────────────────┼───────────────────┼───────────────────┤
+│                requests │                17 │                 0 │
+├─────────────────────────┼───────────────────┼───────────────────┤
+│            test-scripts │                17 │                 0 │
+├─────────────────────────┼───────────────────┼───────────────────┤
+│      prerequest-scripts │                 2 │                 0 │
+├─────────────────────────┼───────────────────┼───────────────────┤
+│              assertions │                17 │                 7 │
+├─────────────────────────┴───────────────────┴───────────────────┤
+│ total run duration: 3.1s                                        │
+├─────────────────────────────────────────────────────────────────┤
+│ total data received: 3.84kB (approx)                            │
+├─────────────────────────────────────────────────────────────────┤
+│ average response time: 75ms [min: 24ms, max: 223ms, s.d.: 49ms] │
+└─────────────────────────────────────────────────────────────────┘
+
+  #  failure     detail
+
+ 1.  Assertion…  400 VALIDATION_ERROR (falla hoy: BUG-06)
+                 expected response to have status code 400 but
+                 got 201
+                 at assertion:0 in test-script
+                 inside "H-01 · Nombre de proyecto inválido
+                 (BUG-06) / POST /projects con nombre "a" →
+                 espera 400"
+
+ 2.  Assertion…  400 VALIDATION_ERROR (falla hoy: BUG-06)
+                 expected response to have status code 400 but
+                 got 201
+                 at assertion:0 in test-script
+                 inside "H-01 · Nombre de proyecto inválido
+                 (BUG-06) / POST /projects con nombre "ab" (2
+                 caracteres) → espera 400"
+
+ 3.  Assertion…  400 VALIDATION_ERROR (falla hoy: BUG-06)
+                 expected response to have status code 400 but
+                 got 201
+                 at assertion:0 in test-script
+                 inside "H-01 · Nombre de proyecto inválido
+                 (BUG-06) / POST /projects con nombre vacío →
+                 espera 400"
+
+ 4.  Assertion…  400 VALIDATION_ERROR (falla hoy: BUG-06)
+                 expected response to have status code 400 but
+                 got 409
+                 at assertion:0 in test-script
+                 inside "H-01 · Nombre de proyecto inválido
+                 (BUG-06) / POST /projects con nombre solo
+                 espacios → espera 400"
+
+ 5.  Assertion…  devuelve solo la tarea TODO/HIGH (falla hoy:
+                 BUG-07)
+                 expected [ 'task-10013', 'task-10015' ] to
+                 deeply equal [ 'task-10013' ]
+                 at assertion:0 in test-script
+                 inside "H-02 · Filtros combinados (BUG-07) /
+                 GET status=TODO&priority=HIGH → solo
+                 TODO/HIGH"
+
+ 6.  Assertion…  devuelve un arreglo vacío (falla hoy: BUG-07)
+                 expected [ { id: 'task-10013', …(11) } ] to
+                 deeply equal []
+                 at assertion:0 in test-script
+                 inside "H-02 · Filtros combinados (BUG-07) /
+                 GET status=TODO&priority=LOW&assignedTo=A →
+                 vacío"
+
+ 7.  Assertion…  201 con status TODO (falla hoy: BUG-08)
+                 expected 'DONE' to deeply equal 'TODO'
+                 at assertion:0 in test-script
+                 inside "H-03 · Estado inicial de la tarea
+                 (BUG-08) / POST tarea con status DONE → se
