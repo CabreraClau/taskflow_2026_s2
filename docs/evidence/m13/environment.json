@@ -1,0 +1,100 @@
+{
+  "recordedAt": "2026-11-24T02:12:36.258Z",
+  "timezone": "America/Montevideo",
+  "baseCommit": "e2c578ec503fbc9b0f92b5649d6c712ac2afeb2a",
+  "feedbackCommit": "eac188c2bd05b347aa20d30388616c00a98d606f",
+  "platform": "win32 x64",
+  "versions": {
+    "node": "v24.19.0",
+    "npm": "12.0.2",
+    "java": "21.0.13+9",
+    "zap": "2.17.0",
+    "playwright": "1.65.0",
+    "axeCore": "4.14.0",
+    "vite": "5.4.11"
+  },
+  "zapAddons": {
+    "automation": "0.58.0",
+    "pscan": "0.6.0",
+    "pscanrules": "70.0.0",
+    "spider": "0.18.0",
+    "reports": "0.43.0",
+    "network": "0.25.0"
+  },
+  "database": {
+    "method": "Nueva SQLite en .audit, migración 20260831232621_init, sin seed; cuentas y proyectos sintéticos.",
+    "file": "zap-b6625445b8f045919acefdec72369bcc.db"
+  },
+  "zap": {
+    "mode": "Baseline pasivo nativo Automation Framework; sin Docker ni activeScan.",
+    "targets": [
+      "http://127.0.0.1:3101",
+      "http://127.0.0.1:5175"
+    ],
+    "authenticated": false,
+    "generatedAt": "2026-11-24T02:05:36.708036800Z",
+    "spiderUrls": 16,
+    "siteAlertEntries": 9,
+    "uniqueRules": 7,
+    "uniqueRiskCounts": {
+      "high": 0,
+      "medium": 3,
+      "low": 2,
+      "informational": 2
+    },
+    "exitCode": 2,
+    "startupDiagnostics": "Firefox ausente: 2 WARN y 1 ERROR de ClientIntegration; addon no utilizado por el plan. Ver zap.log.",
+    "htmlRenderedAndSummaryChecked": true
+  },
+  "manualHttp": {
+    "command": "node security/http-security-audit.cjs --isolated --base http://127.0.0.1:3101/api --with-reset --output docs/evidence/m13/http-results.json",
+    "summary": {
+      "observation": 2,
+      "pass": 25,
+      "not-applicable": 1,
+      "finding": 6
+    }
+  },
+  "a11y": {
+    "command": "node node_modules/@playwright/test/cli.js test a11y --project=chromium --reporter=list --output=.audit/m13-a11y",
+    "exitCode": 0,
+    "passed": 4,
+    "auditedViews": 5,
+    "automaticWcagViolations": 0,
+    "shellProcessOverride": "ComSpec=C:\\Windows\\System32\\cmd.exe; npm_config_script_shell=ComSpec",
+    "note": "ACC-02 y ACC-03 siguen pendientes; cero violaciones automáticas no certifica conformidad WCAG."
+  },
+  "clientBuild": {
+    "commands": [
+      "node node_modules/typescript/bin/tsc",
+      "node node_modules/vite/bin/vite.js build"
+    ],
+    "cwd": "client",
+    "exitCode": 0
+  },
+  "sha256": {
+    "docs/evidence/m13/a11y-after-detail.png": "242ea9ef617cb34c617ea374ad7811cc3dab8d2725daf314779ccc77ab244ac8",
+    "docs/evidence/m13/a11y-after.json": "d67a18bfae953ce1d21467fcfc9cf4bf57c2c012918639229ba1ab80447d9750",
+    "docs/evidence/m13/a11y-run.txt": "201e10bd8520a3ccfe883ecf52b9fce4c04753d9b531c31225ee75bad0a407dd",
+    "docs/evidence/m13/cvss-results.json": "ddbdf06c9341255bc179d09739614e56b2b15c679ed091d00a0535c67fc557b3",
+    "docs/evidence/m13/http-results.json": "9f4a18d15e055c42d4e8e8c7550bca9db1f2373b8494dcd873d9486108c90cc4",
+    "docs/evidence/m13/manual-after.json": "8500b1c7899348c51868c17a7fc659b7acb19e639f1cb8d0bd4bd3d7d0aa7f68",
+    "docs/evidence/m13/verification-after.json": "0b99a8fb27324c25d3cec56e090958a667ae3c4823be4bae5362263fd9fd95af",
+    "docs/evidence/m13/xss-ui.json": "4b32e69112084b185f665f4e28f2bc3681c884ea67d81d0c1cd64b2be32ba349",
+    "docs/evidence/m13/zap-baseline-2026-11-23.json": "5ddc79660fdeadd5a97c14d62136dd447698ce7263b90ec35606040c73212104",
+    "docs/evidence/m13/zap-console.txt": "67ea69af3ed0a4a73d9a2ad4925616d6946016a44b28cda5f0d323a862cebca1",
+    "docs/evidence/m13/zap-exit-code.txt": "df4e26a04a444901b95afef44e4a96cfae34690fff2ad2c66389c70079cdff2b",
+    "docs/evidence/m13/zap.log": "39c5600cd9e443a0a3b80172a0ab2b898093dc648c716e213e0f6bb85e4126cb",
+    "docs/zap-baseline-2026-11-23.html": "e01782e05f6208acf3f0041f3ce5f93e655acb0006115d353aa32d202c6b7622",
+    "security/zap-baseline.yaml": "6a47b195f3ef9bd88e04b1a7e8b36c6256bf94169eb13c8e991f45dea018a608",
+    "security/verify-cvss.cjs": "e66baf9b7feefb9fe5ebc1a3d5585d970414f8a59e5113563fbdf39d5d1045b1",
+    "server/src/app.ts": "748eb2d334b0c13cf585c0674570da804721e431c12b81ffe8a4a320264c2e25",
+    "server/src/modules/tasks/tasks.repository.ts": "aa02151ee90c92408c5c99d025db75af0813307ae0b5340c8541aaeb8aacd454",
+    "server/src/modules/tasks/tasks.service.ts": "170e54c1009319192fa3ef01225de5a6ea76f582ec056720521ab19aefeaea1d",
+    "server/src/modules/tasks/tasks.routes.ts": "f15f32593bb5db9eed097f8c1830be09d908c173f11029fd02a6bb33746ded62",
+    "server/src/modules/auth/auth.service.ts": "c3788cf15c035647ac2feddb2cca22936e9675cde0d6405eb03df11c3a8d8115",
+    "client/dist/index.html": "1e806fcf01bb815fbd5f7106444894860bd98a8dd71576fd6f25d008c6b4e028",
+    "client/dist/assets/index-CJh9WA4i.js": "97e47f64a0b014f41e905a8ad734c6ec85d942e131d39d6def46ae802d75ae57",
+    "client/dist/assets/index-D1X_ziRG.css": "3dbb684aec2550b99d3be9e20c80cd03c09f30d89bb363d0043a6ad6d9d9f6c7"
+  }
+}

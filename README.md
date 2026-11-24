@@ -4,6 +4,8 @@ Gestor de tareas colaborativo. Los usuarios crean proyectos, invitan miembros, c
 
 Este es el proyecto sobre el que vas a trabajar durante todo el semestre en **Testing y Calidad de Software**.
 
+La entrega de [seguridad y accesibilidad](docs/clase12-m2-reporte.md) incluye CVSS 3.1 de SEC-01/02, el [reporte OWASP ZAP](docs/zap-baseline-2026-11-23.html) y los [pasos para reproducirlos](security/README.md).
+
 ## Requisitos
 
 - **Node.js 20 o superior** y **npm 10 o superior** (verificá con `node -v` y `npm -v`)

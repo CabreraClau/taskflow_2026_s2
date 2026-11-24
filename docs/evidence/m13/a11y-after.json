@@ -1,0 +1,32 @@
+{
+  "phase": "after",
+  "engine": "axe-core",
+  "scope": "WCAG 2.1 A/AA",
+  "views": [
+    {
+      "name": "Login",
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "Registro",
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "Proyectos",
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "Detalle de proyecto",
+      "violations": [],
+      "incompleteRules": []
+    },
+    {
+      "name": "Detalle de tarea",
+      "violations": [],
+      "incompleteRules": []
+    }
+  ]
+}

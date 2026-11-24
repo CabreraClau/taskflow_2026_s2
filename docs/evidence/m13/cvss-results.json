@@ -1,0 +1,24 @@
+{
+  "calculatedAt": "2026-11-24T02:02:34.858Z",
+  "engine": "FIRST CVSS 3.1 calculator, calculateCVSSFromVector",
+  "source": "https://www.first.org/cvss/calculator/cvsscalc31.js",
+  "sourceSha256": "0f9b9d8000cbc0cc2201170bc9fcbab35a2c728746e52082cb88419db6b545eb",
+  "nodeVersion": "v24.19.0",
+  "scope": "Puntajes base del impacto acreditado; sin métricas temporales ni ambientales.",
+  "findings": [
+    {
+      "id": "SEC-01",
+      "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
+      "baseScore": 4.3,
+      "severity": "Medium",
+      "calculator": "https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N"
+    },
+    {
+      "id": "SEC-02",
+      "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:N",
+      "baseScore": 5.4,
+      "severity": "Medium",
+      "calculator": "https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:N"
+    }
+  ]
+}
