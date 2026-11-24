@@ -1,0 +1,60 @@
+3101 [main] INFO  org.parosproxy.paros.Constant - Copying default configuration to C:\Mis cosas\Testing de software\clau\taskflow_2026_s2\.audit\zap-home-m13\config.xml
+3571 [main] INFO  org.parosproxy.paros.Constant - Creating directory C:\Mis cosas\Testing de software\clau\taskflow_2026_s2\.audit\zap-home-m13\session
+3575 [main] INFO  org.parosproxy.paros.Constant - Creating directory C:\Mis cosas\Testing de software\clau\taskflow_2026_s2\.audit\zap-home-m13\dirbuster
+3577 [main] INFO  org.parosproxy.paros.Constant - Creating directory C:\Mis cosas\Testing de software\clau\taskflow_2026_s2\.audit\zap-home-m13\fuzzers
+3579 [main] INFO  org.parosproxy.paros.Constant - Creating directory C:\Mis cosas\Testing de software\clau\taskflow_2026_s2\.audit\zap-home-m13\plugin
+Job passiveScan-config set scanOnlyInScope = true
+Job passiveScan-config set maxAlertsPerRule = 10
+Job requestor set url = http://127.0.0.1:3101/api/health
+Job requestor set method = GET
+Job requestor set responseCode = 200
+Job requestor set url = http://127.0.0.1:3101/api/projects
+Job requestor set method = GET
+Job requestor set responseCode = 401
+Job requestor set url = http://127.0.0.1:5175/login
+Job requestor set method = GET
+Job requestor set responseCode = 200
+Job spider set context = taskflow-local
+Job spider set url = http://127.0.0.1:5175/login
+Job spider set maxDuration = 1
+Job spider set maxDepth = 2
+Job spider set processForm = false
+Job spider set postForm = false
+Job passiveScan-wait set maxDuration = 5
+Job report set template = traditional-html
+Job report set reportDir = ../docs
+Job report set reportFile = zap-baseline-2026-11-23
+Job report set reportTitle = TaskFlow - ZAP baseline pasivo local
+Job report set reportDescription = API y build del frontend; sin autenticaci�n ni escaneo activo. Base e2c578e, SQLite descartable.
+Job report set displayReport = false
+Job report set template = traditional-json
+Job report set reportDir = ../docs/evidence/m13
+Job report set reportFile = zap-baseline-2026-11-23
+Job report set displayReport = false
+Job exitStatus set errorLevel = High
+Job exitStatus set warnLevel = Low
+Job passiveScan-config started
+Job passiveScan-config finished, time taken: 00:00:00
+Job requestor started
+Job requestor requesting URL http://127.0.0.1:3101/api/health
+Job requestor requesting URL http://127.0.0.1:3101/api/projects
+Job requestor requesting URL http://127.0.0.1:5175/login
+Job requestor finished, time taken: 00:00:00
+Job spider started
+Job spider requesting URL http://127.0.0.1:3101/api/health
+Job spider requesting URL http://127.0.0.1:5175/login
+Job spider found 16 URLs
+Job spider finished, time taken: 00:00:00
+Job passiveScan-wait started
+Job passiveScan-wait finished, time taken: 00:00:03
+Job report started
+Job report generated report C:\Mis cosas\Testing de software\clau\taskflow_2026_s2\security\..\docs\zap-baseline-2026-11-23.html
+Job report finished, time taken: 00:00:01
+Job report started
+Job report generated report C:\Mis cosas\Testing de software\clau\taskflow_2026_s2\security\..\docs\evidence\m13\zap-baseline-2026-11-23.json
+Job report finished, time taken: 00:00:00
+Job exitStatus started
+An alert has been raised with a risk of at least: Low
+Job exitStatus finished, time taken: 00:00:00
+Automation plan warnings:
+	An alert has been raised with a risk of at least: Low

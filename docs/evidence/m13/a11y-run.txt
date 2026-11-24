@@ -1,0 +1,38 @@
+[WebServer] Prisma schema loaded from prisma\schema.prisma
+[WebServer] Datasource "db": SQLite database "e2e.db" at "file:C:/Users/frana/AppData/Local/Temp/taskflow-e2e-B8tl8D/e2e.db"
+[WebServer] 
+[WebServer] 1 migration found in prisma/migrations
+[WebServer] 
+[WebServer] Applying migration `20260831232621_init`
+[WebServer] 
+[WebServer] The following migration(s) have been applied:
+[WebServer] 
+[WebServer] migrations/
+[WebServer]   └─ 20260831232621_init/
+[WebServer]     └─ migration.sql
+[WebServer]       
+[WebServer] All migrations have been successfully applied.
+[WebServer] E2E: SQLite temporal preparada con migraciones, sin seed.
+[WebServer] (node:2172) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] TaskFlow API escuchando en http://localhost:3100/api
+[WebServer] npm notice run taskflow-client@1.0.0 dev
+[WebServer] npm notice run vite --host 127.0.0.1 --port 5174 --strictPort
+[WebServer] (node:5756) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:2052) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Login: 0 regla(s) WCAG violada(s)
+Registro: 0 regla(s) WCAG violada(s)
+Proyectos: 0 regla(s) WCAG violada(s)
+Detalle de proyecto: 0 regla(s) WCAG violada(s)
+Detalle de tarea: 0 regla(s) WCAG violada(s)
+  ok 1 [chromium] › e2e\playwright\tests\a11y.spec.ts:19:1 › a11y informe WCAG 2.1 A y AA en cinco vistas (7.1s)
+  ok 2 [chromium] › e2e\playwright\tests\a11y.spec.ts:55:1 › a11y verificación de la corrección label en detalle de tarea (1.9s)
+  ok 3 [chromium] › e2e\playwright\tests\a11y.spec.ts:68:1 › a11y revisión complementaria de teclado idioma errores y CSS (2.1s)
+  ok 4 [chromium] › e2e\playwright\tests\a11y.spec.ts:116:1 › seguridad XSS almacenado se representa como texto en tablero y detalle (1.4s)
+
+  4 passed (27.9s)

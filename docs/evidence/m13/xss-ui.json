@@ -1,0 +1,8 @@
+{
+  "expectedBeforeExecution": "React debe representar el título como texto; no insertar una imagen ni ejecutar alert",
+  "payload": "<img src=x onerror=alert(1)>",
+  "boardShowsLiteral": true,
+  "detailShowsLiteral": true,
+  "injectedImages": 0,
+  "dialogs": []
+}

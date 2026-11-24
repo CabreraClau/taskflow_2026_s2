@@ -2,6 +2,8 @@
 
 Fecha: 8 de noviembre de 2026, America/Montevideo. Base analizada: `75254f7` de `CabreraClau/taskflow_2026_s2`. Herramientas: Node 22.19.0, npm 10.9.3, Playwright 1.65.0, axe-core 4.14.0 y Chromium.
 
+**Complemento del 23/11/2026:** se completa el feedback de IngridM13 del commit `eac188c`: CVSS 3.1 de SEC-01/02 y baseline pasivo de OWASP ZAP sobre la copia local en `clau`, base `e2c578e`. La evidencia del 8/11 se conserva; la nueva corrida se guarda en [evidence/m13/](evidence/m13/). Las vulnerabilidades siguen abiertas: este complemento documenta y valida los entregables pedidos.
+
 Se confirmaron dos fallos principales de seguridad: lectura de tareas de otro proyecto por SQL injection y edición de títulos por un usuario sin membresía. También se confirmó un flujo de recuperación de contraseña inseguro sobre una tercera cuenta descartable. En accesibilidad se documentaron tres problemas y se corrigieron los campos sin nombre accesible. La verificación de esa corrección pasó de rojo a verde.
 
 ## Alcance y adaptación de la guía
@@ -87,7 +89,7 @@ La guía usa el texto `' OR '1'='1' --`; en la ejecución se usó su variante ta
 
 ### SEC-01 SQL injection permite leer tareas de otro proyecto
 
-**Severidad:** HIGH. **Ubicación:** `server/src/modules/tasks/tasks.repository.ts`, `findTasks`, líneas 28–52, interpolación de `term` en `$queryRawUnsafe`.
+**Severidad CVSS 3.1:** MEDIA, **4,3/10**. **Vector:** [`CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N`](https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N). **Prioridad contextual:** P1. La valoración HIGH original era cualitativa; no era una clasificación CVSS. **Ubicación:** `server/src/modules/tasks/tasks.repository.ts`, `findTasks`, líneas 28–52, interpolación de `term` en `$queryRawUnsafe`.
 
 **Descripción:** `search` se concatena dentro del SQL. Una entrada puede cerrar la expresión de búsqueda y alterar el filtro de proyecto, aunque el usuario tenga permiso sobre el proyecto de la URL.
 
@@ -106,7 +108,7 @@ La guía usa el texto `' OR '1'='1' --`; en la ejecución se usó su variante ta
 
 ### SEC-02 Un no miembro puede editar el título de una tarea ajena
 
-**Severidad:** HIGH. **Ubicación:** `server/src/modules/tasks/tasks.routes.ts:14` y `tasks.service.ts`, `updateTask`, líneas 87–178.
+**Severidad CVSS 3.1:** MEDIA, **5,4/10**. **Vector:** [`CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:N`](https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:N). **Prioridad contextual:** P1. La valoración HIGH original era cualitativa; no era una clasificación CVSS. **Ubicación:** `server/src/modules/tasks/tasks.routes.ts:14` y `tasks.service.ts`, `updateTask`, líneas 87–178.
 
 **Descripción:** la ruta PATCH no exige membresía. El servicio autoriza los cambios de estado, pero no exige autorización equivalente para título, descripción y otros campos editables.
 
@@ -117,11 +119,30 @@ La guía usa el texto `' OR '1'='1' --`; en la ejecución se usó su variante ta
 3. Como B, enviar el mismo PATCH con `{"title":"Título alterado por no miembro"}`: 200.
 4. Leer la tarea como A: el título alterado persiste. En la prueba se restauró el título original.
 
-**Impacto:** modificación no autorizada de datos ajenos con una cuenta válida y un identificador conocido. El rechazo de `status` no protege los demás campos. DELETE también omite el middleware en el código, pero no se ejecutó una eliminación ajena.
+**Impacto:** modificación no autorizada de datos ajenos con una cuenta válida y un identificador conocido. Además, la respuesta del PATCH devuelve la descripción privada `Synthetic private data A` y los metadatos de la tarea al no miembro; se acredita también pérdida de confidencialidad. El rechazo de `status` no protege los demás campos. DELETE también omite el middleware en el código, pero no se ejecutó una eliminación ajena.
 
 **Remediación propuesta:** comprobar membresía en la ruta y permisos de escritura en el servicio antes de modificar cualquier campo. Cubrir lectura, edición y eliminación con tests de usuarios ajenos.
 
 **Evidencia:** `foreign-task-title`, `owner-verifies-foreign-title-update` y `restore-synthetic-title` en [HTTP JSON](../security/results/http-results.json). **Estado:** documentado, pendiente de corrección.
+
+### Justificación de CVSS 3.1 para SEC-01 y SEC-02
+
+Actualización del 23 de noviembre de 2026. Se puntúa cada vulnerabilidad por separado, con el impacto acreditado en las cuentas sintéticas. Se evalúan únicamente métricas base; no se evaluaron métricas temporales ni ambientales. Cada vector anterior abre la calculadora FIRST con sus valores. [Evidencia del cálculo](evidence/m13/cvss-results.json).
+
+| Métrica | SEC-01 | SEC-02 |
+| --- | --- | --- |
+| Vector de ataque (AV) | N: entrada por la API HTTP; la prueba usa loopback, sin requerir acceso al sistema operativo. | N: solicitud PATCH a la API HTTP. |
+| Complejidad (AC) | L: payload reproducible, sin carrera ni condición externa. Adaptarlo al SQL conocido no exige AC:H. | L: basta enviar el título y el ID conocido; no requiere carrera ni condición externa. |
+| Privilegios requeridos (PR) | L: JWT de usuario común y membresía en su propio proyecto, sin privilegios administrativos. | L: JWT de usuario común, sin membresía en el proyecto víctima. |
+| Interacción de usuario (UI) | N: ninguna otra persona interviene. | N: ninguna otra persona interviene. |
+| Alcance (S) | U: tareas y SQLite pertenecen a la autoridad de seguridad de TaskFlow. | U: ambos proyectos están bajo la misma autoridad TaskFlow; cruzarlos no cambia S. |
+| Confidencialidad (C) | L: se leen tareas privadas ajenas; no se acreditó pérdida total de datos, credenciales ni otras tablas. | L: la respuesta del PATCH expone descripción y metadatos de una tarea privada ajena. |
+| Integridad (I) | N: la prueba acredita lectura, sin modificación SQL. | L: título ajeno modificado y persistido; alcance limitado, con cambio de estado rechazado. |
+| Disponibilidad (A) | N: no se acreditó interrupción del servicio. | N: no se acreditó interrupción; DELETE ajeno no fue ejecutado. |
+
+Los puntajes base **4,3 y 5,4 corresponden a MEDIA** (rango 4,0–6,9). Se mantiene prioridad P1 por el acceso entre proyectos privados. Esa prioridad contextual no modifica las métricas ni convierte la valoración cualitativa HIGH original en una severidad CVSS alta. Tampoco se suman los puntajes ni se incorporan los impactos del flujo de recuperación de contraseña a estas dos fichas.
+
+Fuentes: [FIRST, especificación CVSS 3.1, métricas base y escala de severidad](https://www.first.org/cvss/v3.1/specification-document), y [guía FIRST, §3.5 sobre Scope y autoridad de seguridad](https://www.first.org/cvss/v3.1/user-guide#3-5-Scope-Vulnerable-Component-and-Impacted-Component).
 
 ### Hallazgo adicional Recuperación de contraseña insegura
 
@@ -144,6 +165,32 @@ La guía usa el texto `' OR '1'='1' --`; en la ejecución se usó su variante ta
 **Código que lo explica:** `server/src/middleware/auth.ts` usa `jwt.verify` y transforma una verificación inválida en 401. jsonwebtoken 9.0.2 no acepta este JWT sin firma en la configuración probada. Se definió un secreto exclusivo de la instancia local. Esto no acredita seguridad de todos los algoritmos, secretos o despliegues.
 
 Otros controles que resistieron: listado/lectura ajenos, transición de estado ajena, asignación a no miembro (400), bloqueo de cuenta B tras cinco intentos fallidos y el XSS de título en la UI. El bloqueo se probó con una cuenta descartable; no se evaluaron su expiración ni resistencia a ataques distribuidos.
+
+## Baseline pasivo con OWASP ZAP
+
+El **23/11/2026, 23:05, America/Montevideo**, se ejecutó **ZAP 2.17.0 con Java 21** mediante su Automation Framework nativo. Se usó una SQLite nueva y exclusiva en `.audit/`, sin seed ni datos de desarrollo. Se auditó la API en `http://127.0.0.1:3101` y el **build** del frontend servido con Vite preview en `http://127.0.0.1:5175`. [Reporte HTML original de ZAP](zap-baseline-2026-11-23.html), [JSON original](evidence/m13/zap-baseline-2026-11-23.json), [plan ejecutado](../security/zap-baseline.yaml), [consola](evidence/m13/zap-console.txt) y [código de salida](evidence/m13/zap-exit-code.txt).
+
+El plan realiza GET explícitos a `/api/health` (200), `/api/projects` sin JWT (401) y `/login` (200), spider tradicional con máximo de un minuto y profundidad 2, espera del análisis pasivo y generación de reportes. El spider informó **16 URLs**. No se configuraron ataques activos, envío de formularios ni autenticación. Es un baseline pasivo nativo; no se ejecutó el wrapper Docker `zap-baseline.py`. La [documentación del baseline](https://www.zaproxy.org/docs/docker/baseline-scan/) y la del [Automation Framework](https://www.zaproxy.org/docs/desktop/addons/automation-framework/) explican estos componentes.
+
+El resumen de ZAP contiene **0 alertas altas, 3 medias, 2 bajas y 2 informativas**, contando reglas únicas. El JSON agrupa 9 entradas por sitio; dos reglas se repiten en API y frontend. Son alertas a evaluar, no siete vulnerabilidades explotadas ni puntajes CVSS.
+
+| ID y alerta ZAP | Riesgo ZAP; instancias API / frontend | Cruce con la revisión manual y decisión |
+| --- | --- | --- |
+| `10038` CSP ausente | Medio; 0 / 4 | Complementa SEC-03: ahora se comprueba también sobre HTML del cliente. Proponer CSP en el servidor que publique el frontend; no demuestra XSS explotable. |
+| `10020` Protección anti-clickjacking ausente | Medio; 0 / 3 | Complementa SEC-03 sobre HTML. Proponer `frame-ancestors` o `X-Frame-Options` según los orígenes permitidos. |
+| `10098` CORS permisivo | Medio; 3 / 5 | Confirma `Access-Control-Allow-Origin: *` de SEC-03 en la API y lo observa en Vite preview. La respuesta de proyectos sigue siendo 401 sin JWT; no acredita lectura privada ni robo de tokens. |
+| `10037` Divulgación de `X-Powered-By` | Bajo; 3 / 0 | Confirma `Express` de SEC-03, sin versión. Proponer desactivar el header. |
+| `10021` Falta `nosniff` | Bajo; 1 / 5 | Confirma SEC-03 en `/api/health` y lo amplía al frontend. Proponer `X-Content-Type-Options: nosniff`. |
+| `10027` Comentarios sospechosos | Informativo; 0 / 1 | La evidencia es `select` en el bundle JS, con un fragmento de namespaces SVG/MathML de React interpretado como comentario. No acredita SQLi, credenciales ni código SQL del servidor; se considera un falso positivo contextual tras revisar el fragmento. Se conserva la alerta original sin filtrarla. |
+| `10109` Aplicación web moderna | Informativo; 0 / 4 | Indica una SPA con scripts y pocos enlaces HTML. Es una limitación de cobertura del spider tradicional; no un defecto de seguridad. |
+
+Las instancias `/robots.txt` y `/sitemap.xml` del frontend reciben el HTML de fallback de la SPA; no prueban la existencia de esos archivos. Los headers del frontend corresponden a **Vite preview local**, no a un despliegue de producción. HSTS no se evalúa con HTTP local.
+
+El spider también observó `/api` con 404: esta aplicación no define un índice en esa ruta. Las comprobaciones explícitas de health, proyectos sin JWT y login recibieron los códigos esperados.
+
+El baseline **no confirma ni descarta SEC-01 (SQLi), SEC-02 (edición ajena) ni SEC-04/05 (recuperación)**: esas pruebas requieren payloads o cuentas/operaciones que este plan no ejecuta. Se repitió por separado la auditoría HTTP sobre la misma DB descartable, con **25 pass, 6 finding, 2 observation y 1 no aplicable**. Los seis `finding` son comprobaciones, no seis vulnerabilidades distintas. Los checks `sqli-bounded-cross-project-read` y `foreign-task-title` vuelven a confirmar SEC-01/02; el PATCH también revela la descripción privada. [Evidencia HTTP nueva, sin contraseñas ni tokens](evidence/m13/http-results.json).
+
+ZAP finalizó con **código 2** porque el job `exitStatus` avisa ante riesgo Low o superior; ambos reportes se generaron y los jobs terminaron. El informe también registra un error y dos advertencias de arranque: el addon de integración de cliente no pudo preparar un perfil de Firefox porque ese navegador no está instalado. El [log completo](evidence/m13/zap.log) permite distinguirlos de los jobs del plan, que usan spider tradicional y no requieren Firefox. No hubo un fallo de conexión a la app. [Entorno, versiones y hashes](evidence/m13/environment.json). Los comandos para repetir el baseline y el cálculo CVSS están en [security/README.md](../security/README.md).
 
 ## Hallazgos de accesibilidad
 
@@ -191,6 +238,8 @@ Se llegó al enlace de proyecto con seis pulsaciones Tab y se abrió el tablero 
 Antes: **3 tests pasaron y 1 falló**, específicamente la aserción de `label`. Después: **4 tests pasaron**, incluidos informe, verificación con nombres accesibles, revisión complementaria y XSS. [Informe antes](evidence/m2/a11y-before.json), [verificación roja](evidence/m2/verification-before.json), [informe después](evidence/m2/a11y-after.json), [verificación verde](evidence/m2/verification-after.json), [salida de ejecución](evidence/m2/a11y-after-run.txt).
 
 Capturas: [antes](evidence/m2/a11y-before-detail.png) y [después](evidence/m2/a11y-after-detail.png). Cero violaciones automáticas no equivale a conformidad WCAG total: ACC-02/03 siguen pendientes.
+
+**Reverificación del 23/11/2026 sobre `e2c578e`:** los **4 tests existentes pasaron**, con 0 reglas WCAG violadas en las cinco vistas y la aserción `label` en verde. Incluye la comprobación XSS de título como texto literal. Se usaron las fixtures actuales con SQLite temporal, independiente de la DB del baseline. [Consola nueva](evidence/m13/a11y-run.txt), [informe axe](evidence/m13/a11y-after.json), [verificación label](evidence/m13/verification-after.json), [revisión complementaria](evidence/m13/manual-after.json) y [XSS](evidence/m13/xss-ui.json). ACC-02/03 continúan pendientes.
 
 ## User stories de remediación
 
@@ -241,7 +290,7 @@ npm run build:client
 npm test
 ```
 
-`test:security` sólo usa hosts locales, genera cuentas propias y no sobrescribe evidencia existente. Los JWT/contraseñas no se guardan. `test:a11y` guarda evidencia de la nueva corrida; conservar la carpeta versionada antes de regenerarla si se necesita comparar con esta entrega.
+`test:security` sólo usa hosts locales, genera cuentas propias y no sobrescribe evidencia existente. Los JWT/contraseñas no se guardan. Con las fixtures actuales, `test:a11y` prepara su propia SQLite temporal en los puertos 3100/5174 y guarda resultados en `.audit/playwright/`; la evidencia histórica versionada se conserva.
 
 ### Estado de la suite existente
 
@@ -253,6 +302,9 @@ El build del cliente pasó. También pasaron tres E2E existentes de edición y l
 
 ## Checklist de la actividad
 
+- [x] CVSS 3.1 de SEC-01 y SEC-02: vector, puntaje, justificación y verificación con el motor oficial FIRST.
+- [x] Baseline pasivo real de OWASP ZAP sobre la app local, HTML en `docs/`, JSON y plan reproducible.
+- [x] Cruce explícito entre alertas ZAP, hallazgos manuales y límites de cobertura.
 - [x] App levantada en la API real de este fork, `:3000/api`, y frontend `:5173`.
 - [x] Auditorías completas y producción en los tres árboles, con dos avisos HIGH/CRITICAL analizados.
 - [x] Headers inspeccionados con `curl.exe -I`, registrando valores.

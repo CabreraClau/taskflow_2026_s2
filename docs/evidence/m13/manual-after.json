@@ -1,0 +1,24 @@
+{
+  "method": "Revisión del DOM y CSS, con navegación Tab/Enter automatizada; no se simuló un lector de pantalla",
+  "css": {
+    "border": "rgb(154, 160, 166)",
+    "background": "rgb(255, 255, 255)"
+  },
+  "purposes": {
+    "loginEmail": null,
+    "loginPassword": null,
+    "registerName": null,
+    "registerEmail": null,
+    "registerPassword": null
+  },
+  "language": "es",
+  "error": {
+    "text": "Invalid credentials",
+    "role": "alert"
+  },
+  "keyboard": {
+    "reachedProjectWithTab": true,
+    "tabCount": 6,
+    "enterOpenedBoard": true
+  }
+}

@@ -1,0 +1,60 @@
+# Baseline nativo de ZAP: solicitudes GET, spider y análisis pasivo, sin activeScan.
+# App exclusiva de auditoría: API 3101 y frontend (build + preview) 5175.
+env:
+  contexts:
+    - name: taskflow-local
+      urls:
+        - http://127.0.0.1:3101/api/health
+        - http://127.0.0.1:5175/login
+      includePaths:
+        - 'http://127\.0\.0\.1:3101/api(/.*)?'
+        - 'http://127\.0\.0\.1:5175(/.*)?'
+  parameters:
+    failOnError: true
+    failOnWarning: false
+    progressToStdout: true
+jobs:
+  - type: passiveScan-config
+    parameters:
+      scanOnlyInScope: true
+      maxAlertsPerRule: 10
+  - type: requestor
+    requests:
+      - url: http://127.0.0.1:3101/api/health
+        method: GET
+        responseCode: 200
+      - url: http://127.0.0.1:3101/api/projects
+        method: GET
+        responseCode: 401
+      - url: http://127.0.0.1:5175/login
+        method: GET
+        responseCode: 200
+  - type: spider
+    parameters:
+      context: taskflow-local
+      url: http://127.0.0.1:5175/login
+      maxDuration: 1
+      maxDepth: 2
+      processForm: false
+      postForm: false
+  - type: passiveScan-wait
+    parameters:
+      maxDuration: 5
+  - type: report
+    parameters:
+      template: traditional-html
+      reportDir: ../docs
+      reportFile: zap-baseline-2026-11-23
+      reportTitle: TaskFlow - ZAP baseline pasivo local
+      reportDescription: API y build del frontend; sin autenticación ni escaneo activo. Base e2c578e, SQLite descartable.
+      displayReport: false
+  - type: report
+    parameters:
+      template: traditional-json
+      reportDir: ../docs/evidence/m13
+      reportFile: zap-baseline-2026-11-23
+      displayReport: false
+  - type: exitStatus
+    parameters:
+      errorLevel: High
+      warnLevel: Low

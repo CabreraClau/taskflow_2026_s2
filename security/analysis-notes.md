@@ -45,7 +45,7 @@ Todos los IDs de esta matriz corresponden a entradas de `checks` en [http-result
 - Evidencia: checks `search-baseline-own-project` y `sqli-bounded-cross-project-read` en [http-results.json](results/http-results.json). El payload es read-only y se limitó a los IDs sintéticos A/B.
 - Observación separada: `' OR 1=1 --` produjo 500 genérico en `sqli-classic-search`, coherente con el contexto `instr`; ese error aislado no se tomó como prueba de lectura cruzada.
 - Remediación: usar Prisma `contains` con `projectId` permanente o `$queryRaw` con parámetros; no concatenar entradas. Agregar test de regresión que confirme que una búsqueda maliciosa no altera el alcance del proyecto.
-- Clasificación: CWE-89, OWASP A03:2021 Injection. **Severidad: alta; prioridad P1**, por lectura privada cruzada demostrada.
+- Clasificación: CWE-89, OWASP A03:2021 Injection. **CVSS 3.1 base: 4,3/10, MEDIA**; vector [`CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N`](https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N). **Prioridad contextual P1**, por lectura privada cruzada demostrada. La valoración alta/HIGH original era cualitativa, no CVSS. [Justificación de cada métrica](../docs/clase12-m2-reporte.md#justificación-de-cvss-31-para-sec-01-y-sec-02).
 
 ### SEC-02: autorización de objeto omitida al modificar tareas
 
@@ -55,11 +55,13 @@ Todos los IDs de esta matriz corresponden a entradas de `checks` en [http-result
 - Reproducción ejecutada: B solicitó `PATCH /api/tasks/task-14` con `{"status":"IN_PROGRESS"}` (403) y luego con `{"title":"audit-1794183487998-cb04fb-changed-by-nonmember-B"}`.
 - Esperado: 403/404 en ambas actualizaciones y conservación del título original.
 - Actual: el cambio de título devolvió **200**; un `GET` posterior hecho por A mostró el título alterado y estado `TODO`. La alteración persistió; A restauró el título original con 200.
-- Impacto confirmado: modificación no autorizada de contenido de otro proyecto con sólo una cuenta válida y el ID del objeto. El 403 del estado no protege el resto de campos.
+- Impacto confirmado: modificación no autorizada de contenido de otro proyecto con sólo una cuenta válida y el ID del objeto. La respuesta del PATCH también revela al no miembro la descripción privada `Synthetic private data A` y los metadatos de la tarea; por eso se incluye impacto de confidencialidad. El 403 del estado no protege el resto de campos.
 - Evidencia: `foreign-task-status`, `foreign-task-title`, `owner-verifies-foreign-title-update` y `restore-synthetic-title` en [http-results.json](results/http-results.json).
 - Límite: la omisión del middleware también afecta estáticamente a `DELETE`, pero no se ejecutó eliminación ajena; no se presenta como explotación demostrada.
 - Remediación: exigir membresía antes de todos los handlers de tarea y definir permisos de escritura/eliminación en servicio; agregar tests de lectura, edición y eliminación por no miembro.
-- Clasificación: CWE-862/CWE-639, IDOR, OWASP A01:2021 Broken Access Control. **Severidad: alta; prioridad P1**, por modificación persistente entre proyectos demostrada.
+- Clasificación: CWE-862/CWE-639, IDOR, OWASP A01:2021 Broken Access Control. **CVSS 3.1 base: 5,4/10, MEDIA**; vector [`CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:N`](https://www.first.org/cvss/calculator/3.1#CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:N). **Prioridad contextual P1**, por modificación persistente entre proyectos demostrada. La valoración alta/HIGH original era cualitativa, no CVSS. [Justificación de cada métrica](../docs/clase12-m2-reporte.md#justificación-de-cvss-31-para-sec-01-y-sec-02).
+
+CVSS actualizado el 23/11/2026 con una valoración conservadora del impacto acreditado. Sólo se evalúan métricas base; las temporales y ambientales no se evaluaron. [Resultados del cálculo](../docs/evidence/m13/cvss-results.json). Fuentes: [especificación FIRST CVSS 3.1](https://www.first.org/cvss/v3.1/specification-document) y [guía FIRST §3.5](https://www.first.org/cvss/v3.1/user-guide#3-5-Scope-Vulnerable-Component-and-Impacted-Component). S permanece U porque los proyectos comparten autoridad; no se atribuyen escritura SQL a SEC-01 ni indisponibilidad o eliminación ajena ejecutada a SEC-02.
 
 ## Hallazgos y observaciones adicionales
 
