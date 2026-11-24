@@ -23,10 +23,10 @@ resto (`npm install`, `npm run db:setup`, `npm run dev`) es idéntico en todos.
 git clone <url-del-repo>
 cd taskflow
 npm install
-cp server/.env.example server/.env
 npm run db:setup
 npm run dev
 ```
+cp server/.env.example server/.env
 
 ### Windows (PowerShell)
 
